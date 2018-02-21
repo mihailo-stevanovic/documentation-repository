@@ -12,9 +12,10 @@ using System;
 namespace DocRepoApi.Migrations
 {
     [DbContext(typeof(DocRepoContext))]
-    partial class DocRepoContextModelSnapshot : ModelSnapshot
+    [Migration("20180221230334_AddDocOtherLink")]
+    partial class AddDocOtherLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

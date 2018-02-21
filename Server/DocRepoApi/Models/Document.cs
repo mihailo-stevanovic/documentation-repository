@@ -15,6 +15,7 @@ namespace DocRepoApi.Models
         public string HtmlLink { get; set; }
         public string PdfLink { get; set; }
         public string WordLink { get; set; }
+        public string OtherLink { get; set; }
         [Required]
         public bool FitForClients { get; set; }
         public string ClientCatalog { get; set; }
