@@ -18,5 +18,8 @@ namespace DocRepoApi.Models
         public string Email { get; set; }
         [Required]
         public string Alias { get; set; }
+
+        public DocumentAuthor DocumentAuthor { get; set; }
+
     }
 }

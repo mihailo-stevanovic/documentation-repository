@@ -97,8 +97,7 @@ namespace DocRepoApi.Data
                 DocumentTypeId = 9,
                 FitForClients = true,
                 ProductVersionId = 14,
-                ClientCatalog = "eFront Portfolio Monitoring",
-                Authors = { authors[0], authors[1], authors[2] },
+                ClientCatalog = "eFront Portfolio Monitoring",                
                 LatestUpdateId = 4
             };
             context.Documents.Add(doc1);
@@ -111,8 +110,7 @@ namespace DocRepoApi.Data
                 DocumentTypeId = 9,
                 FitForClients = true,
                 ProductVersionId = 22,
-                ClientCatalog = "eFront Mobile",
-                Authors = { authors[0] },
+                ClientCatalog = "eFront Mobile",                
                 LatestUpdateId = 8
             };
             context.Documents.Add(doc2);

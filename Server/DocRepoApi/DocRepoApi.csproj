@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180221221747_DocumentAuthors.cs" />
+    <Compile Remove="Migrations\20180221221747_DocumentAuthors.Designer.cs" />
+    <Compile Remove="Migrations\20180221222851_AddDocumentAuthor.cs" />
+    <Compile Remove="Migrations\20180221222851_AddDocumentAuthor.Designer.cs" />
+    <Compile Remove="Migrations\20180221223200_AddDocumentAuthor.cs" />
+    <Compile Remove="Migrations\20180221223200_AddDocumentAuthor.Designer.cs" />
+    <Compile Remove="Migrations\20180221223910_AddDocumentAuthor.cs" />
+    <Compile Remove="Migrations\20180221223910_AddDocumentAuthor.Designer.cs" />
+    <Compile Remove="Migrations\20180221224845_AddParentDocument.cs" />
+    <Compile Remove="Migrations\20180221224845_AddParentDocument.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

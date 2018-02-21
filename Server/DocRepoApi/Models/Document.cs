@@ -20,16 +20,18 @@ namespace DocRepoApi.Models
         public string ClientCatalog { get; set; }
         public string ShortDescription { get; set; }
         public int AitId { get; set; }
-
-        // Foreign Key        
-        public ICollection<Author> Authors { get; set; }
+                   
+        
+        public ICollection<DocumentAuthor> DocumentAuthors { get; set; }
 
         // Foreign Key
         public int LatestUpdateId { get; set; }
         public DocumentUpdate LatestUpdate { get; set; }
 
         // Foreign Key
-        public int ParentDocumentId { get; set; }
+        public int? ParentDocumentId { get; set; }
+        public virtual Document ParentDocument { get; set; }
+        public virtual ICollection<Document> ChildDocuments { get; set; }
 
         // Foreign Key
         public int ProductVersionId { get; set; }
