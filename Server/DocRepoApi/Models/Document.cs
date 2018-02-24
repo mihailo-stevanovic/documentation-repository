@@ -16,18 +16,20 @@ namespace DocRepoApi.Models
         public string PdfLink { get; set; }
         public string WordLink { get; set; }
         public string OtherLink { get; set; }
-        [Required]
-        public bool FitForClients { get; set; }
+        [Display(Name = "Fit for clients")]
+        public bool IsFitForClients { get; set; }
+        [DisplayFormat(NullDisplayText = "N/A")]
         public string ClientCatalog { get; set; }
         public string ShortDescription { get; set; }
-        public int AitId { get; set; }
+        public int? AitId { get; set; }
                    
         
         public ICollection<DocumentAuthor> DocumentAuthors { get; set; }
 
-        // Foreign Key
-        public int LatestUpdateId { get; set; }
-        public DocumentUpdate LatestUpdate { get; set; }
+        // Should be handleded differently
+        //// Foreign Key
+        //public int LatestUpdateId { get; set; }
+        //public DocumentUpdate LatestUpdate { get; set; }
 
         // Foreign Key
         public int? ParentDocumentId { get; set; }
@@ -41,5 +43,8 @@ namespace DocRepoApi.Models
         // Foreign Key
         public int DocumentTypeId { get; set; }
         public DocumentType DocumentType { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

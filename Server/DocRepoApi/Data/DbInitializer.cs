@@ -20,12 +20,13 @@ namespace DocRepoApi.Data
 
             var authors = new Author[]
             {
-                    new Author { FirstName="Mihailo", LastName="Stevanović", Alias="MSTEV", Email="mstevanovic@efront.com" },
-                    new Author { FirstName="Ivana", LastName="Matić", Alias="IMATI", Email="imatic@efront.com" },
-                    new Author { FirstName="Milica", LastName="Prorok", Alias="MPROR", Email="mprorok@efront.com" }
+                    new Author { FirstName="Mihailo", LastName="Stevanović", Alias="MSTEV", Email="mstevanovic@efront.com", AitName = "Mihailo", IsFormerAuthor = false },
+                    new Author { FirstName="Ivana", LastName="Matić", Alias="IMATI", Email="imatic@efront.com", AitName = "Ivana", IsFormerAuthor = false },
+                    new Author { FirstName="Milica", LastName="Prorok", Alias="MPROR", Email="mprorok@efront.com", AitName = "Milica", IsFormerAuthor = false  },
+                    new Author { FirstName="Milica", LastName="Nikolić", Alias="MILNI", Email="milnikolic@efront.com", AitName = "Mili", IsFormerAuthor = true  }
             };
 
-            if (context.Authors.Count() < 3)
+            if (context.Authors.Count() < 4)
             {
                 foreach (Author author in authors)
                 {
@@ -93,12 +94,16 @@ namespace DocRepoApi.Data
             Document doc1 = new Document
             {
                 Title = "eFront PM Release Notes",
-                PdfLink = "eFrontPM/ReleaseNotes/eFrontPM_ReleaseNotes_V2018.1",
+                PdfLink = "eFrontPM/ReleaseNotes/eFrontPM_ReleaseNotes_V2018-1.pdf",
                 DocumentTypeId = 9,
-                FitForClients = true,
+                IsFitForClients = true,
                 ProductVersionId = 14,
-                ClientCatalog = "eFront Portfolio Monitoring",                
-                LatestUpdateId = 4
+                ClientCatalog = "eFront Portfolio Monitoring",
+                DocumentAuthors =
+                {
+                    new DocumentAuthor {Author = authors[0]},
+                    new DocumentAuthor {Author = authors[1]},
+                }
             };
             context.Documents.Add(doc1);
 
@@ -106,12 +111,17 @@ namespace DocRepoApi.Data
             Document doc2 = new Document
             {
                 Title = "eFront Mobile Release Notes",
-                PdfLink = "eFrontMobile/ReleaseNotes/eFrontPM_ReleaseNotes_V2018.1",
+                PdfLink = "eFrontMobile/ReleaseNotes/eFrontMobile_ReleaseNotes_V2018-1.pdf",
                 DocumentTypeId = 9,
-                FitForClients = true,
+                IsFitForClients = true,
                 ProductVersionId = 22,
-                ClientCatalog = "eFront Mobile",                
-                LatestUpdateId = 8
+                ClientCatalog = "eFront Mobile",
+                DocumentAuthors =
+                {
+                    new DocumentAuthor {Author = authors[0]},
+                    new DocumentAuthor {Author = authors[2]},
+                    new DocumentAuthor {Author = authors[3]},
+                }                
             };
             context.Documents.Add(doc2);
 
@@ -134,7 +144,7 @@ namespace DocRepoApi.Data
 
             context.SaveChanges();
 
-
+            
 
         }
     }

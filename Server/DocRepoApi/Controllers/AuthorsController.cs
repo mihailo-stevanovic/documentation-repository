@@ -21,23 +21,53 @@ namespace DocRepoApi.Controllers
             _context = context;
         }
 
-        // GET: api/Authors
+        // GET: api/v1/Authors
         [HttpGet]
-        public IEnumerable<Author> GetAuthors()
+        public IEnumerable<Author> GetAuthors(bool includeDocuments = true)
         {
+            if (includeDocuments)
+            {
+                return _context.Authors.Include(a => a.DocumentsAuthored);
+            }
+
             return _context.Authors;
+
+
         }
 
-        // GET: api/Authors/5
+        // GET: api/v1/Authors/Active
+        [HttpGet("Active")]
+        public IEnumerable<Author> GetActiveAuthors(bool includeDocuments = true)
+        {
+            if (includeDocuments)
+            {
+                return _context.Authors.Include(a => a.DocumentsAuthored).Where(a => !a.IsFormerAuthor);
+            }
+
+            return _context.Authors.Where(a => !a.IsFormerAuthor);
+
+        }
+
+        // GET: api/v1/Authors/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAuthor([FromRoute] int id)
+        public async Task<IActionResult> GetAuthor([FromRoute] int id, bool includeDocuments = true)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var author = await _context.Authors.SingleOrDefaultAsync(m => m.Id == id);
+            Author author;
+
+            if (includeDocuments)
+            {
+                author = await _context.Authors.Include(a => a.DocumentsAuthored).SingleOrDefaultAsync(m => m.Id == id);
+            }
+            else
+            {
+                author = await _context.Authors.SingleOrDefaultAsync(m => m.Id == id);
+            }
+            
 
             if (author == null)
             {
@@ -82,7 +112,7 @@ namespace DocRepoApi.Controllers
             return NoContent();
         }
 
-        // POST: api/Authors
+        // POST: api/v1/Authors
         [HttpPost]
         public async Task<IActionResult> PostAuthor([FromBody] Author author)
         {
@@ -95,6 +125,21 @@ namespace DocRepoApi.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetAuthor", new { id = author.Id }, author);
+        }
+
+        // POST: api/v1/Authors/Batch
+        [HttpPost("Batch")]
+        public async Task<IActionResult> PostMultipleAuthors([FromBody] IEnumerable<Author> AuthorList)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _context.Authors.AddRange(AuthorList);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetAuthors",AuthorList);
         }
 
         // DELETE: api/Authors/5

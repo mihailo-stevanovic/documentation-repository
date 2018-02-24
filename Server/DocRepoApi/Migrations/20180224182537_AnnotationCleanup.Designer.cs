@@ -12,9 +12,10 @@ using System;
 namespace DocRepoApi.Migrations
 {
     [DbContext(typeof(DocRepoContext))]
-    partial class DocRepoContextModelSnapshot : ModelSnapshot
+    [Migration("20180224182537_AnnotationCleanup")]
+    partial class AnnotationCleanup
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,9 +26,6 @@ namespace DocRepoApi.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AitName")
-                        .HasMaxLength(10);
 
                     b.Property<string>("Alias")
                         .IsRequired()
@@ -74,10 +72,6 @@ namespace DocRepoApi.Migrations
 
                     b.Property<int>("ProductVersionId");
 
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
-
                     b.Property<string>("ShortDescription");
 
                     b.Property<string>("Title")
@@ -107,7 +101,8 @@ namespace DocRepoApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId")
+                        .IsUnique();
 
                     b.HasIndex("DocumentId");
 
@@ -143,10 +138,6 @@ namespace DocRepoApi.Migrations
                     b.Property<bool>("IsPublished");
 
                     b.Property<string>("LatestTopicsUpdated");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<DateTime>("Timestamp");
 
@@ -210,8 +201,8 @@ namespace DocRepoApi.Migrations
             modelBuilder.Entity("DocRepoApi.Models.DocumentAuthor", b =>
                 {
                     b.HasOne("DocRepoApi.Models.Author", "Author")
-                        .WithMany("DocumentsAuthored")
-                        .HasForeignKey("AuthorId")
+                        .WithOne("DocumentAuthor")
+                        .HasForeignKey("DocRepoApi.Models.DocumentAuthor", "AuthorId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("DocRepoApi.Models.Document", "Document")

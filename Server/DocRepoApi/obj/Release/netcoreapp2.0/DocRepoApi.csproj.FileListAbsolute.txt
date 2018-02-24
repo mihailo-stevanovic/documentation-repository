@@ -1,0 +1,11 @@
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\bin\Release\netcoreapp2.0\DocRepoApi.deps.json
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\bin\Release\netcoreapp2.0\DocRepoApi.runtimeconfig.json
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\bin\Release\netcoreapp2.0\DocRepoApi.runtimeconfig.dev.json
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\bin\Release\netcoreapp2.0\DocRepoApi.dll
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\bin\Release\netcoreapp2.0\DocRepoApi.pdb
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\obj\Release\netcoreapp2.0\DocRepoApi.csprojResolveAssemblyReference.cache
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\obj\Release\netcoreapp2.0\DocRepoApi.csproj.CoreCompileInputs.cache
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\obj\Release\netcoreapp2.0\DocRepoApi.AssemblyInfoInputs.cache
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\obj\Release\netcoreapp2.0\DocRepoApi.AssemblyInfo.cs
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\obj\Release\netcoreapp2.0\DocRepoApi.dll
+D:\VisualStudioApps\DocRepository\Server\DocRepoApi\obj\Release\netcoreapp2.0\DocRepoApi.pdb

@@ -13,7 +13,8 @@ namespace DocRepoApi.Models
         [Required]
         public string FullName { get; set; }
         [Required]
-        public string ShortName { get; set; }
+        [StringLength(5, ErrorMessage = "The Short name cannot be longer than 5 characters.")]
+        public string ShortName { get; set; }        
         public DocumentCategory DocumentCategory { get; set; }
     }
 }

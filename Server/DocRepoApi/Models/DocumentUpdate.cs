@@ -9,14 +9,17 @@ namespace DocRepoApi.Models
     public class DocumentUpdate
     {
         [Key]
-        public int Id { get; set; }
-        [Required]
+        public int Id { get; set; }        
         public DateTime Timestamp { get; set; }
+        [DataType(DataType.Html)]
         public string LatestTopicsUpdated { get; set; }
         // Is visible
         public bool IsPublished { get; set; }
 
         // Foreign Key
         public int DocumentId { get; set; }
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

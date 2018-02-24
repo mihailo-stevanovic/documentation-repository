@@ -11,6 +11,7 @@ namespace DocRepoApi.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        [StringLength(10, ErrorMessage = "The Release cannot be longer than 10 characters.")]
         public string Release { get; set; }
 
         // Foreign Key
