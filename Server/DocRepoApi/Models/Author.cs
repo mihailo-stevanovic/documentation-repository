@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DocRepoApi.Models
 {
-    public class Author
+    public class Author : IEquatable<Author>, IComparable<Author>
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -33,5 +33,61 @@ namespace DocRepoApi.Models
 
         public ICollection<DocumentAuthor> DocumentsAuthored { get; set; }
 
+        public int CompareTo(Author other)
+        {
+
+            if(other == null)
+            {
+                return 1;
+            }
+            else
+            {
+                return this.Alias.CompareTo(other.Alias);
+            }
+
+        }
+
+        public bool Equals(Author other)
+        {            
+            if (other == null)
+            {
+                return false;
+            }
+            return this.Id.Equals(other.Id);
+        }
+
+        public bool Equals(Author other, bool matchAll)
+        {
+            if (!matchAll)
+            {
+                return this.Equals(other);
+            }
+            if (other == null)
+            {
+                return false;
+            }
+            if (!this.Id.Equals(other.Id))
+            {
+                return false;
+            }
+            if (!this.IsFormerAuthor.Equals(other.IsFormerAuthor))
+            {
+                return false;
+            }
+            if (!this.FirstName.Equals(other.FirstName))
+            {
+                return false;
+            }
+            if (!this.LastName.Equals(other.LastName))
+            {
+                return false;
+            }
+            if (!this.Alias.Equals(other.Alias))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

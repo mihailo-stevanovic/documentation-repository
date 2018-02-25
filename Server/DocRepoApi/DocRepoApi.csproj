@@ -15,6 +15,8 @@
     <Compile Remove="Migrations\20180221223910_AddDocumentAuthor.Designer.cs" />
     <Compile Remove="Migrations\20180221224845_AddParentDocument.cs" />
     <Compile Remove="Migrations\20180221224845_AddParentDocument.Designer.cs" />
+    <Compile Remove="Migrations\20180224223809_MinorFixes.cs" />
+    <Compile Remove="Migrations\20180224223809_MinorFixes.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

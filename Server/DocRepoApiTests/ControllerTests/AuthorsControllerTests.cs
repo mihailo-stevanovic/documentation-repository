@@ -11,6 +11,21 @@ namespace DocRepoApiTests.ControllerTests
 {
     public class AuthorsControllerTests
     {
+        private Author GetTestAuthor(int i)
+        {            
+            return new Author
+            {
+                Id = i,
+                Alias = $"AUTH{i}",
+                FirstName = $"First Name {i}",
+                LastName = $"Last Name {i}",
+                Email = $"dauthor{i}@domain.com",
+                AitName = $"user{i}",
+                IsFormerAuthor = (i % 2 == 0)
+            };
+        }
+
+
         // GET Methods
 
         [Fact(DisplayName = "GetAuthors() should return a list of all Authors")]
@@ -20,11 +35,14 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new AuthorsController(context))
             {
                 var result = controller.GetAuthors();
+                Author a3 = GetTestAuthor(3);
 
                 Assert.NotNull(result);
                 Assert.IsAssignableFrom<IEnumerable<Author>>(result);
                 Assert.Equal(10, result.Count());
-                Assert.Equal("AUTH3", result.Where(r => r.Id == 3).Select(r => r.Alias).First());
+                Author a = (Author)result.Where(r => r.Id == 3).FirstOrDefault();
+                Assert.True(a.Equals(a3));
+                Assert.True(a.Equals(a3, true));
                 Assert.NotEmpty(result.Where(r => r.DocumentsAuthored != null));
             }
         }
@@ -51,11 +69,14 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new AuthorsController(context))
             {
                 var result = controller.GetActiveAuthors();
+                Author a3 = GetTestAuthor(3);
 
                 Assert.NotNull(result);
                 Assert.IsAssignableFrom<IEnumerable<Author>>(result);
                 Assert.Equal(5, result.Count());
-                Assert.Equal("AUTH3", result.Where(r => r.Id == 3).Select(r => r.Alias).First());
+                Author a = (Author)result.Where(r => r.Id == 3).FirstOrDefault();
+                Assert.True(a.Equals(a3));
+                Assert.True(a.Equals(a3, true));
                 Assert.NotEmpty(result.Where(r => r.DocumentsAuthored != null));
             }
         }
@@ -67,11 +88,14 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new AuthorsController(context))
             {
                 var result = controller.GetActiveAuthors(false);
+                Author a3 = GetTestAuthor(3);
 
                 Assert.NotNull(result);
                 Assert.IsAssignableFrom<IEnumerable<Author>>(result);
                 Assert.Equal(5, result.Count());
-                Assert.Equal("AUTH3", result.Where(r => r.Id == 3).Select(r => r.Alias).First());
+                Author a = (Author)result.Where(r => r.Id == 3).FirstOrDefault();
+                Assert.True(a.Equals(a3));
+                Assert.True(a.Equals(a3, true));
                 Assert.Empty(result.Where(r => r.DocumentsAuthored != null));
             }
         }
@@ -83,14 +107,16 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new AuthorsController(context))
             {
                 var result = await controller.GetAuthor(3);
-
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);
-
                 var resultValue = okObjectResult.Value;
+
+                Author a3 = GetTestAuthor(3);
 
                 Assert.NotNull(resultValue);
                 Assert.IsType<Author>(resultValue);
-                Assert.Equal("AUTH3", ((Author)resultValue).Alias );
+                Author a = (Author)resultValue;
+                Assert.True(a.Equals(a3));
+                Assert.True(a.Equals(a3, true));                
                 Assert.NotNull(((Author)resultValue).DocumentsAuthored);
             }
         }
@@ -102,14 +128,16 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new AuthorsController(context))
             {
                 var result = await controller.GetAuthor(3, false);
-
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);
-
                 var resultValue = okObjectResult.Value;
+
+                Author a3 = GetTestAuthor(3);
 
                 Assert.NotNull(resultValue);
                 Assert.IsType<Author>(resultValue);
-                Assert.Equal("AUTH3", ((Author)resultValue).Alias);
+                Author a = (Author)resultValue;
+                Assert.True(a.Equals(a3));
+                Assert.True(a.Equals(a3, true));
                 Assert.Null(((Author)resultValue).DocumentsAuthored);
             }
         }
@@ -141,6 +169,9 @@ namespace DocRepoApiTests.ControllerTests
 
             }
         }
+
+        // PUT Methods
+
 
     }
 }
