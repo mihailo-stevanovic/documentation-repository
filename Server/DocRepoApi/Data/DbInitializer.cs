@@ -64,14 +64,14 @@ namespace DocRepoApi.Data
             {
                 var products = new Product[]
                 {
-                    new Product { ShortName = "FIA" , FullName = "eFront Invest" },
-                    new Product { ShortName = "FPM" , FullName = "eFront Portfolio Monitoring" },
-                    new Product { ShortName = "PEO" , FullName = "eFront PEO/VC" },
-                    new Product { ShortName = "FM" , FullName = "eFront Mobile" },
-                    new Product { ShortName = "FO" , FullName = "eFront Outlook" },
-                    new Product { ShortName = "ICX" , FullName = "eFront Investment Café" },
-                    new Product { ShortName = "ICC" , FullName = "Investment Café Classic" },
-                    new Product { ShortName = "INS" , FullName = "eFront Insight" }
+                    new Product { ShortName = "FIA" , FullName = "eFront Invest", Alias = "FrontInvest" },
+                    new Product { ShortName = "FPM" , FullName = "eFront Portfolio Monitoring", Alias = "FrontPM" },
+                    new Product { ShortName = "PEO" , FullName = "eFront PEO/VC", Alias = "FrontGP" },
+                    new Product { ShortName = "FM" , FullName = "eFront Mobile", Alias = "FrontMobile" },
+                    new Product { ShortName = "FO" , FullName = "eFront Outlook", Alias = "FrontOutlook" },
+                    new Product { ShortName = "ICX" , FullName = "eFront Investment Café", Alias = "eIC" },
+                    new Product { ShortName = "ICC" , FullName = "Investment Café Classic", Alias = "IC" },
+                    new Product { ShortName = "INS" , FullName = "eFront Insight", Alias = "Inisght" }
                 };
 
                 foreach (Product product in products)
@@ -84,7 +84,7 @@ namespace DocRepoApi.Data
                 foreach (string version in versions)
                 {
                     var productVersions = Enumerable.Range(1, products.Count())
-                        .Select(i => new ProductVersion { ProductId = i, Release = version });
+                        .Select(i => new ProductVersion { ProductId = i, Release = version, EndOfSupport = DateTime.Today.AddMonths(i * 2) });
                     context.AddRange(productVersions);
                 }
 

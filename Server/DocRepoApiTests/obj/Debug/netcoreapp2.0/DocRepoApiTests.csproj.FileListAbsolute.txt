@@ -14,3 +14,4 @@ D:\VisualStudioApps\DocRepository\Server\DocRepoApiTests\obj\Debug\netcoreapp2.0
 D:\VisualStudioApps\DocRepository\Server\DocRepoApiTests\obj\Debug\netcoreapp2.0\DocRepoApiTests.csprojResolveAssemblyReference.cache
 D:\VisualStudioApps\DocRepository\Server\DocRepoApiTests\bin\Debug\netcoreapp2.0\DocRepoApi.dll
 D:\VisualStudioApps\DocRepository\Server\DocRepoApiTests\bin\Debug\netcoreapp2.0\DocRepoApi.pdb
+D:\VisualStudioApps\DocRepository\Server\DocRepoApiTests\bin\Debug\netcoreapp2.0\DocRepoApi.xml

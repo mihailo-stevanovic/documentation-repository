@@ -1,18 +1,22 @@
 ﻿using DocRepoApi.Controllers;
 using DocRepoApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
 
 namespace DocRepoApiTests.ControllerTests
 {
     public class AuthorsControllerTests
     {
+        /// <summary>
+        /// Create a single author for testing.
+        /// </summary>
+        /// <param name="i">ID of the test author.</param>
+        /// <returns>A single test author.</returns>
         private Author GetTestAuthor(int i)
-        {            
+        {
+
             return new Author
             {
                 Id = i,
@@ -23,14 +27,13 @@ namespace DocRepoApiTests.ControllerTests
                 AitName = $"user{i}",
                 IsFormerAuthor = (i % 2 == 0)
             };
-        }
-
+        }       
 
         // GET Methods
 
         [Fact(DisplayName = "GetAuthors() should return a list of all Authors")]
         public void GetAuthorsReturnsListOfAuthors()
-        {            
+        {
             using (var context = DbTestContext.GenerateContextWithData())
             using (var controller = new AuthorsController(context))
             {
@@ -116,7 +119,7 @@ namespace DocRepoApiTests.ControllerTests
                 Assert.IsType<Author>(resultValue);
                 Author a = (Author)resultValue;
                 Assert.True(a.Equals(a3));
-                Assert.True(a.Equals(a3, true));                
+                Assert.True(a.Equals(a3, true));
                 Assert.NotNull(((Author)resultValue).DocumentsAuthored);
             }
         }
@@ -151,7 +154,7 @@ namespace DocRepoApiTests.ControllerTests
                 var result = await controller.GetAuthor(99);
 
                 Assert.IsType<NotFoundResult>(result);
-                
+
             }
         }
 
@@ -170,8 +173,90 @@ namespace DocRepoApiTests.ControllerTests
             }
         }
 
-        // PUT Methods
+        // PUT Methods        
+        [Fact(DisplayName = "PutAuthor(id, Author) should update the context")]
+        public async void PutAuthorCorrectDataUpdatesContext()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new AuthorsController(context))
+            {
 
+                Author a3 = GetTestAuthor(3);
+                a3.LastName = "Modified";                
+
+                var result = await controller.PutAuthor(a3.Id, a3);
+
+                Assert.IsType<NoContentResult>(result);         
+                
+
+            }
+        }
+
+        // POST Methods
+        [Fact(DisplayName = "PostAuthor(Author) should create a new Author")]
+        public async void PostAuthorCorrectDataCreatesAuthor()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new AuthorsController(context))
+            {
+                Author a11 = GetTestAuthor(11);              
+
+                var result = await controller.PostAuthor(a11);
+
+                Assert.NotNull(result);
+                var resultValue = Assert.IsType<CreatedAtActionResult>(result);
+                
+                
+            }
+        }
+
+
+
+        // DELETE Methods
+        [Fact(DisplayName = "DeleteAuthor(id) should remove the author from context")]
+        public async void DeleteAuthorIdDeletesAuthor()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new AuthorsController(context))
+            {
+                var result = await controller.DeleteAuthor(3);
+                Author a3 = GetTestAuthor(3);
+
+                Assert.NotNull(result);
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);
+                var resultValue = okObjectResult.Value;
+                Assert.Equal(a3, resultValue);
+
+            }
+        }
+
+        [Fact(DisplayName = "DeleteAuthor(wrongId) should return NotFound")]
+        public async void DeleteAuthorWithIncorrectIdReturnsNotFound()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new AuthorsController(context))
+            {
+                var result = await controller.DeleteAuthor(99);
+
+                Assert.IsType<NotFoundResult>(result);
+
+            }
+        }
+
+        [Fact(DisplayName = "DeleteAuthor(id) with ModelStateError should return BadRequest")]
+        public async void DeleteAuthorModelStateErrorReturnsBadRequest()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new AuthorsController(context))
+            {
+                controller.ModelState.AddModelError("an error", "some error");
+
+                var result = await controller.DeleteAuthor(1);
+
+                Assert.IsType<BadRequestObjectResult>(result);
+
+            }
+        }
 
     }
 }

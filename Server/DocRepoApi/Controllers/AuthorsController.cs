@@ -22,6 +22,11 @@ namespace DocRepoApi.Controllers
         }
 
         // GET: api/v1/Authors
+        /// <summary>
+        /// Returns all authors.
+        /// </summary>
+        /// <param name="includeDocuments">Optionally include documents in the response.</param>
+        /// <returns>A list of authors.</returns>
         [HttpGet]
         public IEnumerable<Author> GetAuthors(bool includeDocuments = true)
         {
@@ -36,6 +41,11 @@ namespace DocRepoApi.Controllers
         }
 
         // GET: api/v1/Authors/Active
+        /// <summary>
+        /// Returns all active authors. Former authors are excluded.
+        /// </summary>
+        /// <param name="includeDocuments">Optionally include documents in the response.</param>
+        /// <returns></returns>
         [HttpGet("Active")]
         public IEnumerable<Author> GetActiveAuthors(bool includeDocuments = true)
         {
@@ -49,6 +59,12 @@ namespace DocRepoApi.Controllers
         }
 
         // GET: api/v1/Authors/5
+        /// <summary>
+        /// Get a single author.
+        /// </summary>
+        /// <param name="id">ID of the author.</param>
+        /// <param name="includeDocuments">Optionally include documents in the response.</param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAuthor([FromRoute] int id, bool includeDocuments = true)
         {
@@ -78,6 +94,15 @@ namespace DocRepoApi.Controllers
         }
 
         // PUT: api/Authors/5
+        /// <summary>
+        /// Updates an author.
+        /// </summary>
+        /// <param name="id">ID of the author.</param>
+        /// <param name="author">Updated author.</param>
+        /// <returns></returns>
+        /// <response code="204">Update is sucessuful.</response>
+        /// <response code="400">Request is incorrect or id from the path does not match the id of the author.</response>
+        /// <response code="404">Author does not exist.</response>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAuthor([FromRoute] int id, [FromBody] Author author)
         {
@@ -92,6 +117,7 @@ namespace DocRepoApi.Controllers
             }
 
             _context.Entry(author).State = EntityState.Modified;
+            
 
             try
             {
@@ -113,6 +139,12 @@ namespace DocRepoApi.Controllers
         }
 
         // POST: api/v1/Authors
+        /// <summary>
+        /// Creates a new author.
+        /// </summary>
+        /// <param name="author"></param>
+        /// <returns></returns>
+        /// <response code="201">Returns the newly created author.</response>
         [HttpPost]
         public async Task<IActionResult> PostAuthor([FromBody] Author author)
         {
@@ -128,6 +160,12 @@ namespace DocRepoApi.Controllers
         }
 
         // POST: api/v1/Authors/Batch
+        /// <summary>
+        /// Creates multiple authors.
+        /// </summary>
+        /// <param name="AuthorList">List of authors.</param>
+        /// <returns></returns>
+        /// <response code="201">Returns the list of newly created authors.</response>
         [HttpPost("Batch")]
         public async Task<IActionResult> PostMultipleAuthors([FromBody] IEnumerable<Author> AuthorList)
         {
@@ -143,6 +181,11 @@ namespace DocRepoApi.Controllers
         }
 
         // DELETE: api/Authors/5
+        /// <summary>
+        /// Deletes an author.
+        /// </summary>
+        /// <param name="id">ID of the author to be deleted.</param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAuthor([FromRoute] int id)
         {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DocRepoApi.Data;
@@ -33,6 +34,9 @@ namespace DocRepoApi
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Doc Repo API", Version = "v1" });
+                var basePath = AppContext.BaseDirectory;
+                var xmlPath = Path.Combine(basePath, "DocRepoApi.xml");
+                c.IncludeXmlComments(xmlPath);
             });
         }
 
