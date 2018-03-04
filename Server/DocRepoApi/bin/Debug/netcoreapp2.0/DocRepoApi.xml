@@ -4,40 +4,37 @@
         <name>DocRepoApi</name>
     </assembly>
     <members>
-        <member name="M:DocRepoApi.Controllers.AuthorsController.GetAuthors(System.Boolean)">
+        <member name="M:DocRepoApi.Controllers.AuthorsController.GetAuthors">
             <summary>
             Returns all authors.
             </summary>
-            <param name="includeDocuments">Optionally include documents in the response.</param>
             <returns>A list of authors.</returns>
         </member>
-        <member name="M:DocRepoApi.Controllers.AuthorsController.GetActiveAuthors(System.Boolean)">
+        <member name="M:DocRepoApi.Controllers.AuthorsController.GetActiveAuthors">
             <summary>
             Returns all active authors. Former authors are excluded.
-            </summary>
-            <param name="includeDocuments">Optionally include documents in the response.</param>
+            </summary>        
             <returns></returns>
         </member>
-        <member name="M:DocRepoApi.Controllers.AuthorsController.GetAuthor(System.Int32,System.Boolean)">
+        <member name="M:DocRepoApi.Controllers.AuthorsController.GetAuthor(System.Int32)">
             <summary>
             Get a single author.
             </summary>
             <param name="id">ID of the author.</param>
-            <param name="includeDocuments">Optionally include documents in the response.</param>
             <returns></returns>
         </member>
-        <member name="M:DocRepoApi.Controllers.AuthorsController.PutAuthor(System.Int32,DocRepoApi.Models.Author)">
+        <member name="M:DocRepoApi.Controllers.AuthorsController.PutAuthor(System.Int32,DocRepoApi.Models.AuthorDto)">
             <summary>
             Updates an author.
             </summary>
             <param name="id">ID of the author.</param>
             <param name="author">Updated author.</param>
             <returns></returns>
-            <response code="204">Update is sucessuful.</response>
+            <response code="204">Update is successuful.</response>
             <response code="400">Request is incorrect or id from the path does not match the id of the author.</response>
             <response code="404">Author does not exist.</response>
         </member>
-        <member name="M:DocRepoApi.Controllers.AuthorsController.PostAuthor(DocRepoApi.Models.Author)">
+        <member name="M:DocRepoApi.Controllers.AuthorsController.PostAuthor(DocRepoApi.Models.AuthorDto)">
             <summary>
             Creates a new author.
             </summary>
@@ -45,13 +42,13 @@
             <returns></returns>
             <response code="201">Returns the newly created author.</response>
         </member>
-        <member name="M:DocRepoApi.Controllers.AuthorsController.PostMultipleAuthors(System.Collections.Generic.IEnumerable{DocRepoApi.Models.Author})">
+        <member name="M:DocRepoApi.Controllers.AuthorsController.PostMultipleAuthors(System.Collections.Generic.IEnumerable{DocRepoApi.Models.AuthorDto})">
             <summary>
             Creates multiple authors.
             </summary>
             <param name="AuthorList">List of authors.</param>
             <returns></returns>
-            <response code="201">Returns the list of newly created authors.</response>
+            <response code="204">Action is successful.</response>
         </member>
         <member name="M:DocRepoApi.Controllers.AuthorsController.DeleteAuthor(System.Int32)">
             <summary>
@@ -104,6 +101,41 @@
             <summary>
             Documents linked to the author.
             </summary>
+        </member>
+        <member name="T:DocRepoApi.Models.AuthorDto">
+            <summary>
+            Represents a DTO class for the Author class.
+            </summary>
+        </member>
+        <member name="P:DocRepoApi.Models.AuthorDto.Id">
+            <summary>
+            ID of the author.
+            </summary>
+        </member>
+        <member name="P:DocRepoApi.Models.AuthorDto.FirstName">
+            <summary>
+            First name of the author.
+            </summary>
+        </member>
+        <member name="P:DocRepoApi.Models.AuthorDto.LastName">
+            <summary>
+            Last name of the author.
+            </summary>
+        </member>
+        <member name="P:DocRepoApi.Models.AuthorDto.Email">
+            <summary>
+            Email address of the author.
+            </summary>
+        </member>
+        <member name="P:DocRepoApi.Models.AuthorDto.IsFormerAuthor">
+            <summary>
+            Is former employee.
+            </summary>        
+        </member>
+        <member name="P:DocRepoApi.Models.AuthorDto.AitName">
+            <summary>
+            Author-IT name of the author.
+            </summary>        
         </member>
         <member name="T:DocRepoApi.Models.Document">
             <summary>

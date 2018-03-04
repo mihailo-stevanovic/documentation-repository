@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DocRepoApi.Data;
 using DocRepoApi.Models;
+using AutoMapper;
 
 namespace DocRepoApi.Controllers
 {
@@ -15,47 +16,37 @@ namespace DocRepoApi.Controllers
     public class AuthorsController : Controller
     {
         private readonly DocRepoContext _context;
+        private readonly IMapper _mapper;
 
-        public AuthorsController(DocRepoContext context)
+        public AuthorsController(DocRepoContext context, IMapper mapper)
         {
             _context = context;
-        }
+            _mapper = mapper;
+        }            
+
 
         // GET: api/v1/Authors
         /// <summary>
         /// Returns all authors.
         /// </summary>
-        /// <param name="includeDocuments">Optionally include documents in the response.</param>
         /// <returns>A list of authors.</returns>
         [HttpGet]
-        public IEnumerable<Author> GetAuthors(bool includeDocuments = true)
-        {
-            if (includeDocuments)
-            {
-                return _context.Authors.Include(a => a.DocumentsAuthored);
-            }
+        public IEnumerable<AuthorDto> GetAuthors()
+        {           
 
-            return _context.Authors;
-
+            return _context.Authors.Select(a => _mapper.Map<AuthorDto>(a));
 
         }
 
         // GET: api/v1/Authors/Active
         /// <summary>
         /// Returns all active authors. Former authors are excluded.
-        /// </summary>
-        /// <param name="includeDocuments">Optionally include documents in the response.</param>
+        /// </summary>        
         /// <returns></returns>
         [HttpGet("Active")]
-        public IEnumerable<Author> GetActiveAuthors(bool includeDocuments = true)
-        {
-            if (includeDocuments)
-            {
-                return _context.Authors.Include(a => a.DocumentsAuthored).Where(a => !a.IsFormerAuthor);
-            }
-
-            return _context.Authors.Where(a => !a.IsFormerAuthor);
-
+        public IEnumerable<AuthorDto> GetActiveAuthors()
+        {         
+            return _context.Authors.Where(a => !a.IsFormerAuthor).Select(a => _mapper.Map<AuthorDto>(a));
         }
 
         // GET: api/v1/Authors/5
@@ -63,34 +54,23 @@ namespace DocRepoApi.Controllers
         /// Get a single author.
         /// </summary>
         /// <param name="id">ID of the author.</param>
-        /// <param name="includeDocuments">Optionally include documents in the response.</param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAuthor([FromRoute] int id, bool includeDocuments = true)
+        public async Task<IActionResult> GetAuthor([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            Author author;
-
-            if (includeDocuments)
-            {
-                author = await _context.Authors.Include(a => a.DocumentsAuthored).SingleOrDefaultAsync(m => m.Id == id);
-            }
-            else
-            {
-                author = await _context.Authors.SingleOrDefaultAsync(m => m.Id == id);
-            }
-            
+            Author author = await _context.Authors.SingleOrDefaultAsync(m => m.Id == id);                      
 
             if (author == null)
             {
                 return NotFound();
             }
 
-            return Ok(author);
+            return Ok(_mapper.Map<AuthorDto>(author));
         }
 
         // PUT: api/Authors/5
@@ -100,12 +80,14 @@ namespace DocRepoApi.Controllers
         /// <param name="id">ID of the author.</param>
         /// <param name="author">Updated author.</param>
         /// <returns></returns>
-        /// <response code="204">Update is sucessuful.</response>
+        /// <response code="204">Update is successuful.</response>
         /// <response code="400">Request is incorrect or id from the path does not match the id of the author.</response>
         /// <response code="404">Author does not exist.</response>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAuthor([FromRoute] int id, [FromBody] Author author)
+        public async Task<IActionResult> PutAuthor([FromRoute] int id, [FromBody] AuthorDto author)
         {
+            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -116,7 +98,9 @@ namespace DocRepoApi.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(author).State = EntityState.Modified;
+            var authorReversed = _mapper.Map<Author>(author);
+
+            _context.Entry(authorReversed).State = EntityState.Modified;
             
 
             try
@@ -146,17 +130,20 @@ namespace DocRepoApi.Controllers
         /// <returns></returns>
         /// <response code="201">Returns the newly created author.</response>
         [HttpPost]
-        public async Task<IActionResult> PostAuthor([FromBody] Author author)
-        {
+        public async Task<IActionResult> PostAuthor([FromBody] AuthorDto author)
+        {            
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Authors.Add(author);
+            Author authorReversed = _mapper.Map<Author>(author);
+
+            _context.Authors.Add(authorReversed);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetAuthor", new { id = author.Id }, author);
+            return CreatedAtAction("GetAuthor", new { id = authorReversed.Id }, _mapper.Map<AuthorDto>(authorReversed));
         }
 
         // POST: api/v1/Authors/Batch
@@ -165,19 +152,22 @@ namespace DocRepoApi.Controllers
         /// </summary>
         /// <param name="AuthorList">List of authors.</param>
         /// <returns></returns>
-        /// <response code="201">Returns the list of newly created authors.</response>
+        /// <response code="204">Action is successful.</response>
         [HttpPost("Batch")]
-        public async Task<IActionResult> PostMultipleAuthors([FromBody] IEnumerable<Author> AuthorList)
+        public async Task<IActionResult> PostMultipleAuthors([FromBody] IEnumerable<AuthorDto> AuthorList)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Authors.AddRange(AuthorList);
-            await _context.SaveChangesAsync();
+            IEnumerable<Author> authorReversedList = AuthorList.Select(a => _mapper.Map<Author>(a));
 
-            return CreatedAtAction("GetAuthors",AuthorList);
+            _context.Authors.AddRange(authorReversedList);
+            await _context.SaveChangesAsync();
+            
+
+            return NoContent();
         }
 
         // DELETE: api/Authors/5
@@ -203,7 +193,7 @@ namespace DocRepoApi.Controllers
             _context.Authors.Remove(author);
             await _context.SaveChangesAsync();
 
-            return Ok(author);
+            return Ok(_mapper.Map<AuthorDto>(author));
         }
 
         private bool AuthorExists(int id)

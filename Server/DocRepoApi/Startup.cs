@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using DocRepoApi.Data;
+using DocRepoApi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +30,7 @@ namespace DocRepoApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DocRepoContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAutoMapper(x => x.AddProfile(new MappingsProfile()));
             services.AddMvc();
 
             // Register the Swagger generator, defining one or more Swagger documents
