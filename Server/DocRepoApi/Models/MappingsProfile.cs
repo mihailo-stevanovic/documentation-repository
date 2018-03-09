@@ -11,6 +11,7 @@ namespace DocRepoApi.Models
         public MappingsProfile()
         {
             CreateMap<Author, AuthorDto>().ReverseMap();
+            CreateMap<Product, ProductDto>().ReverseMap();
         }
     }
 }

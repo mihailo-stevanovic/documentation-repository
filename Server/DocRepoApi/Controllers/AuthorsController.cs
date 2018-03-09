@@ -51,7 +51,7 @@ namespace DocRepoApi.Controllers
 
         // GET: api/v1/Authors/5
         /// <summary>
-        /// Get a single author.
+        /// Returns a single author.
         /// </summary>
         /// <param name="id">ID of the author.</param>
         /// <returns></returns>

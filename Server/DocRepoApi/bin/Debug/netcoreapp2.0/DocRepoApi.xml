@@ -18,7 +18,7 @@
         </member>
         <member name="M:DocRepoApi.Controllers.AuthorsController.GetAuthor(System.Int32)">
             <summary>
-            Get a single author.
+            Returns a single author.
             </summary>
             <param name="id">ID of the author.</param>
             <returns></returns>
@@ -56,6 +56,19 @@
             </summary>
             <param name="id">ID of the author to be deleted.</param>
             <returns></returns>
+        </member>
+        <member name="M:DocRepoApi.Controllers.ProductsController.GetProducts">
+            <summary>
+            Returns all products.
+            </summary>
+            <returns>List of all products.</returns>
+        </member>
+        <member name="M:DocRepoApi.Controllers.ProductsController.GetProduct(System.Int32)">
+            <summary>
+            Returns a single product by ID.
+            </summary>
+            <param name="id">ID of the product.</param>
+            <returns>A single product.</returns>
         </member>
         <member name="T:DocRepoApi.Models.Author">
             <summary>
@@ -356,6 +369,31 @@
             <summary>
             Used for old product names.
             </summary>
+        </member>
+        <member name="T:DocRepoApi.Models.ProductDto">
+            <summary>
+            Represents a DTO class of the Product class.
+            </summary>
+        </member>
+        <member name="P:DocRepoApi.Models.ProductDto.Id">
+            <summary>
+            Id of the product.
+            </summary>        
+        </member>
+        <member name="P:DocRepoApi.Models.ProductDto.FullName">
+            <summary>
+            Marketing name of the product.
+            </summary>        
+        </member>
+        <member name="P:DocRepoApi.Models.ProductDto.ShortName">
+            <summary>
+            Short name of the product (e.g. FPM, FIA, etc.)
+            </summary>        
+        </member>
+        <member name="P:DocRepoApi.Models.ProductDto.Alias">
+            <summary>
+            Used for old product names.
+            </summary>        
         </member>
         <member name="T:DocRepoApi.Models.ProductVersion">
             <summary>

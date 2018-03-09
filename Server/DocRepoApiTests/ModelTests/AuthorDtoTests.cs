@@ -6,24 +6,13 @@ using Xunit;
 
 namespace DocRepoApiTests.ModelTests
 {
-    public class AuthorTests
-    {        
-        /*
-         * TEST ARE BROKEN DUE TO DTO REFACTORING
-        [Fact(DisplayName = "Author.Equals(other) should math based on id and all properties")]
+    public class AuthorDtoTests
+    {                
+        
+        [Fact(DisplayName = "AuthorDto.Equals(other) should math based on id and all properties")]
         public void AuthorEqualsReturnsCorrectValues()
         {
-            Author a1 = new Author {
-                Id = 1,
-                Alias = "ALIAS",
-                AitName = "Tech",
-                FirstName = "Tech",
-                LastName = "Writer",
-                Email = "tech@writer.com",
-                IsFormerAuthor = false
-            };
-
-            Author a2 = new Author
+            AuthorDto a1 = new AuthorDto
             {
                 Id = 1,
                 Alias = "ALIAS",
@@ -34,7 +23,18 @@ namespace DocRepoApiTests.ModelTests
                 IsFormerAuthor = false
             };
 
-            Author a3 = new Author
+            AuthorDto a2 = new AuthorDto
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                AitName = "Tech",
+                FirstName = "Tech",
+                LastName = "Writer",
+                Email = "tech@writer.com",
+                IsFormerAuthor = false
+            };
+
+            AuthorDto a3 = new AuthorDto
             {
                 Id = 3,
                 Alias = "ALIAS",
@@ -45,7 +45,7 @@ namespace DocRepoApiTests.ModelTests
                 IsFormerAuthor = false
             };
 
-            Author a4 = new Author
+            AuthorDto a4 = new AuthorDto
             {
                 Id = 1,
                 Alias = "SAILA",
@@ -64,19 +64,19 @@ namespace DocRepoApiTests.ModelTests
             Assert.False(a1.Equals(a4, true));
 
         }
-        [Fact(DisplayName = "List<Author>.Sort() should sort authors based on Alias")]
+        [Fact(DisplayName = "List<AuthorDto>.Sort() should sort authors based on Alias")]
         public void AuthorsSortReturnsListSortedByAlias()
         {
-            List<Author> authors = new List<Author>
+            List<AuthorDto> authors = new List<AuthorDto>
             {
-                new Author { Id = 1, Alias = "BBB" }, // 2
-                new Author { Id = 2, Alias = "AAA" }, // 0
-                new Author { Id = 3, Alias = "DDD" }, // 4
-                new Author { Id = 4, Alias = "CCC"},  // 3
-                new Author { Id = 5, Alias = "ZZZ"},  // 7
-                new Author { Id = 6, Alias = "ABC"},  // 1
-                new Author { Id = 7, Alias = "DEF"},  // 5
-                new Author { Id = 8, Alias = "XYZ"}   // 6
+                new AuthorDto { Id = 1, Alias = "BBB" }, // 2
+                new AuthorDto { Id = 2, Alias = "AAA" }, // 0
+                new AuthorDto { Id = 3, Alias = "DDD" }, // 4
+                new AuthorDto { Id = 4, Alias = "CCC"},  // 3
+                new AuthorDto { Id = 5, Alias = "ZZZ"},  // 7
+                new AuthorDto { Id = 6, Alias = "ABC"},  // 1
+                new AuthorDto { Id = 7, Alias = "DEF"},  // 5
+                new AuthorDto { Id = 8, Alias = "XYZ"}   // 6
             };
 
             authors.Sort();
@@ -89,7 +89,8 @@ namespace DocRepoApiTests.ModelTests
             Assert.True(authors[5].Id.Equals(7));
             Assert.True(authors[6].Id.Equals(8));
             Assert.True(authors[7].Id.Equals(5));
-        }
-        */
+
+        }        
+        
     }
 }
