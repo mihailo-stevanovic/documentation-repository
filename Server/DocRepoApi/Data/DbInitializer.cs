@@ -12,7 +12,7 @@ namespace DocRepoApi.Data
         {
             context.Database.EnsureCreated();
 
-            if (context.Documents.Any())
+            if (context.DocumentUpdates.Any())
             {
                 return;
             }
@@ -51,7 +51,7 @@ namespace DocRepoApi.Data
                 };
 
             if (context.ClientCatalogs.Count() < 10)
-            {               
+            {
 
                 foreach (ClientCatalog cat in clientCatalogs)
                 {
@@ -61,7 +61,7 @@ namespace DocRepoApi.Data
                 context.SaveChanges();
             }
 
-            
+
 
             if (context.DocumentTypes.Count() < 9)
             {
@@ -123,18 +123,19 @@ namespace DocRepoApi.Data
                 PdfLink = "eFrontPM/ReleaseNotes/eFrontPM_ReleaseNotes_V2018-1.pdf",
                 DocumentTypeId = 9,
                 IsFitForClients = true,
-                ProductVersionId = 14,                
-                DocumentAuthors =
+                ProductVersionId = 14,
+                DocumentAuthors = new List<DocumentAuthor>
                 {
                     new DocumentAuthor {Author = authors[0]},
-                    new DocumentAuthor {Author = authors[1]},
+                    new DocumentAuthor {Author = authors[1]}
                 },
-                DocumentCatalogs =
+                DocumentCatalogs = new List<DocumentCatalog>
                 {
                     new DocumentCatalog { Catalog =  clientCatalogs[1] }
                 }
 
             };
+
             context.Documents.Add(doc1);
 
 
@@ -144,14 +145,14 @@ namespace DocRepoApi.Data
                 PdfLink = "eFrontMobile/ReleaseNotes/eFrontMobile_ReleaseNotes_V2018-1.pdf",
                 DocumentTypeId = 9,
                 IsFitForClients = true,
-                ProductVersionId = 22,                
-                DocumentAuthors =
+                ProductVersionId = 22,
+                DocumentAuthors = new List<DocumentAuthor>
                 {
                     new DocumentAuthor {Author = authors[0]},
                     new DocumentAuthor {Author = authors[2]},
                     new DocumentAuthor {Author = authors[3]},
                 },
-                DocumentCatalogs =
+                DocumentCatalogs = new List<DocumentCatalog>
                 {
                     new DocumentCatalog { Catalog =  clientCatalogs[0] },
                     new DocumentCatalog { Catalog =  clientCatalogs[3] }
@@ -177,8 +178,6 @@ namespace DocRepoApi.Data
             }
 
             context.SaveChanges();
-
-            
 
         }
     }

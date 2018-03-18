@@ -74,10 +74,11 @@ namespace DocRepoApi.Models
         /// </summary>
         public ICollection<DocumentCatalog> DocumentCatalogs { get; set; }
 
-        // Should be handleded differently
-        //// Foreign Key
-        //public int LatestUpdateId { get; set; }
-        //public DocumentUpdate LatestUpdate { get; set; }
+        // Necessary in order to retrieve all the related updates.
+        /// <summary>
+        /// Link to all the updates made to the document.
+        /// </summary>
+        public ICollection<DocumentUpdate> Updates { get; set; }
 
         // Foreign Key
         /// <summary>
@@ -111,7 +112,7 @@ namespace DocRepoApi.Models
         /// <summary>
         /// Link to the related document type.
         /// </summary>
-        public DocumentType DocumentType { get; set; }              
+        public DocumentType DocumentType { get; set; }
 
         /// <summary>
         /// Used to prevent DB concurrency issues during updates.
