@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DocRepoApi.Models
 {
-    /// <summary>
-    /// Represent a client catalog. Used for restricting document visibility to client users.
-    /// </summary>
-    public class ClientCatalog : IDocRepoEntity<ClientCatalog>
+    public class ClientCatalogDto : IDocRepoEntity<ClientCatalogDto>
     {
         #region Properties
         /// <summary>
         /// ID of the client catalog.
-        /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        /// </summary>        
         public int Id { get; set; }
         /// <summary>
         /// Name of the client catalog.
@@ -32,7 +26,7 @@ namespace DocRepoApi.Models
         #endregion
 
         #region Methods
-        public int CompareTo(ClientCatalog other)
+        public int CompareTo(ClientCatalogDto other)
         {
             if (other == null)
             {
@@ -44,7 +38,7 @@ namespace DocRepoApi.Models
             }
         }
 
-        public bool Equals(ClientCatalog other)
+        public bool Equals(ClientCatalogDto other)
         {
             if (other == null)
             {
@@ -53,7 +47,7 @@ namespace DocRepoApi.Models
             return this.Id.Equals(other.Id);
         }
 
-        public bool Equals(ClientCatalog other, bool matchAll)
+        public bool Equals(ClientCatalogDto other, bool matchAll)
         {
             if (!matchAll)
             {
@@ -66,7 +60,7 @@ namespace DocRepoApi.Models
             if (!this.Id.Equals(other.Id))
             {
                 return false;
-            }        
+            }
             if (!this.Name.Equals(other.Name))
             {
                 return false;
@@ -74,7 +68,7 @@ namespace DocRepoApi.Models
             if (!this.InternalId.Equals(other.InternalId))
             {
                 return false;
-            }            
+            }
 
             return true;
         }

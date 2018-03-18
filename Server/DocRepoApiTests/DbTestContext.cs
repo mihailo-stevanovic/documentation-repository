@@ -33,7 +33,18 @@ namespace DocRepoApiTests
                 });
 
             context.Authors.AddRange(authors);
-            
+
+            // Create and add test client catalogs
+            var clientCatalogs = Enumerable.Range(1, 10)
+                .Select(i => new ClientCatalog
+                {
+                    Id = i,
+                    Name = $"Catalog {i}",
+                    InternalId = $"C{i}"
+                });
+
+            context.ClientCatalogs.AddRange(clientCatalogs);
+
             // Create and add test products
             var products = Enumerable.Range(1, 10)
                 .Select(i => new Product
