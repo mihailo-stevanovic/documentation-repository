@@ -11,6 +11,7 @@ namespace DocRepoApiTests.ModelTests
     {
         private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
 
+        #region Test Compare and Sort
         [Fact(DisplayName = "ProductDto.Equals(other) should math based on id and all properties")]
         public void ProductDtoEqualsReturnsCorrectValues()
         {
@@ -78,7 +79,9 @@ namespace DocRepoApiTests.ModelTests
             Assert.True(products[7].Id.Equals(5));
 
         }
+        #endregion
 
+        #region Test Mapping
         [Fact(DisplayName = "Product is properly mapped to ProductDto")]
         public void ProductProperlyMappedToProductDto()
         {
@@ -128,5 +131,6 @@ namespace DocRepoApiTests.ModelTests
             Assert.True(p1.Equals(p2));
             Assert.True(p1.Equals(p2, true));
         }
+        #endregion
     }
 }

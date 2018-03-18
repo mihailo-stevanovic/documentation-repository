@@ -7,62 +7,51 @@ using System.Threading.Tasks;
 namespace DocRepoApi.Models
 {
     /// <summary>
-    /// Represents a DTO class of the Product class.
+    /// Represents a DTO of a DocumentType.
     /// </summary>
-    public class ProductDto : IDocRepoEntity<ProductDto>
+    public class DocumentTypeDto : IDocRepoEntity<DocumentTypeDto>
     {
         #region Properties
         /// <summary>
-        /// Id of the product.
+        /// ID of the document type.
         /// </summary>        
         public int Id { get; set; }
         /// <summary>
-        /// Marketing name of the product.
-        /// </summary>        
+        /// Full name of the document type.
+        /// </summary>
         [Required(AllowEmptyStrings = false)]
         public string FullName { get; set; }
         /// <summary>
-        /// Short name of the product (e.g. FPM, FIA, etc.)
-        /// </summary>        
+        /// Short name (code) of the document type.
+        /// </summary>
         [Required(AllowEmptyStrings = false)]
-        [StringLength(7, ErrorMessage = "The Short name cannot be longer than 7 characters.")]
+        [StringLength(5, ErrorMessage = "The Short name cannot be longer than 5 characters.")]
         public string ShortName { get; set; }
         /// <summary>
-        /// Used for old product names.
-        /// </summary>        
-        [MinLength(4)]
-        public string Alias { get; set; }
+        /// Category of the document type.
+        /// </summary>
+        public DocumentCategory DocumentCategory { get; set; }
         #endregion
 
         #region Methods
-        public override bool Equals(object obj)
-        {
-            var other = obj as ProductDto;
-            if (other == null)
-            {
-                return false;
-            }
-            return this.Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public int CompareTo(ProductDto other)
+        public int CompareTo(DocumentTypeDto other)
         {
             if (other == null)
             {
                 return 1;
             }
-            else
+
+            int comparedCategory = this.DocumentCategory.CompareTo(other.DocumentCategory);
+
+            if (comparedCategory == 0)
             {
                 return this.FullName.CompareTo(other.FullName);
             }
+
+            return comparedCategory;
         }
 
-        public bool Equals(ProductDto other)
+        public bool Equals(DocumentTypeDto other)
         {
             if (other == null)
             {
@@ -71,7 +60,7 @@ namespace DocRepoApi.Models
             return this.Id.Equals(other.Id);
         }
 
-        public bool Equals(ProductDto other, bool matchAll)
+        public bool Equals(DocumentTypeDto other, bool matchAll)
         {
             if (!matchAll)
             {
@@ -89,7 +78,7 @@ namespace DocRepoApi.Models
             {
                 return false;
             }
-            if (!this.Alias.Equals(other.Alias))
+            if (!this.DocumentCategory.Equals(other.DocumentCategory))
             {
                 return false;
             }

@@ -33,7 +33,7 @@ namespace DocRepoApiTests
                 });
 
             context.Authors.AddRange(authors);
-
+            
             // Create and add test products
             var products = Enumerable.Range(1, 10)
                 .Select(i => new Product
@@ -61,7 +61,20 @@ namespace DocRepoApiTests
                 });
 
                 context.ProductVersions.AddRange(productVersions);
-            }                       
+            }
+
+            // Create and add test document types
+
+            var docTypes = Enumerable.Range(1, 8)
+                .Select(i => new DocumentType
+                {
+                    Id = i,
+                    FullName = $"Doc Type{i}",
+                    ShortName = $"DT{i}",
+                    DocumentCategory = (DocumentCategory)(i < 5 ? i : i - 4 )-1
+                });
+
+            context.AddRange(docTypes);
 
             context.SaveChanges();
             return context;

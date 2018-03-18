@@ -11,6 +11,7 @@ namespace DocRepoApiTests.ModelTests
     {
         private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
 
+        #region Test Compare and Sort
         [Fact(DisplayName = "ProductVersionDto.Equals(other) should math based on id and all properties")]
         public void ProductVersionDtoEqualsReturnsCorrectValues()
         {
@@ -78,7 +79,9 @@ namespace DocRepoApiTests.ModelTests
             Assert.True(ProductVersions[7].Id.Equals(5));
 
         }
-
+        #endregion
+        
+        #region Test Mapping
         [Fact(DisplayName = "ProductVersion is properly mapped to ProductVersionDto")]
         public void ProductVersionProperlyMappedToProductVersionDto()
         {
@@ -135,8 +138,7 @@ namespace DocRepoApiTests.ModelTests
             Assert.NotNull(p2);
             Assert.True(p1.Equals(p2));
             Assert.True(p1.Equals(p2, true));
-
         }
-
+        #endregion
     }
 }

@@ -12,6 +12,7 @@ namespace DocRepoApi.Models
     /// </summary>
     public class AuthorDto : IDocRepoEntity<AuthorDto>
     {
+        #region Properties
         /// <summary>
         /// ID of the author.
         /// </summary>
@@ -50,7 +51,9 @@ namespace DocRepoApi.Models
         [StringLength(10, ErrorMessage = "AIT Name cannot be longer than 10 characters.")]
         [MinLength(4)]
         public string AitName { get; set; }
+        #endregion
 
+        #region Methods
         public override bool Equals(object obj)
         {
             var other = obj as AuthorDto;
@@ -120,5 +123,7 @@ namespace DocRepoApi.Models
         {
             return base.GetHashCode();
         }
+
+        #endregion
     }
 }

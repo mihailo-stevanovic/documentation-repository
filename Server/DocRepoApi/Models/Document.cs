@@ -12,6 +12,7 @@ namespace DocRepoApi.Models
     /// </summary>
     public class Document
     {
+        #region Properties
         /// <summary>
         /// ID of the document.
         /// </summary>
@@ -106,5 +107,6 @@ namespace DocRepoApi.Models
         /// </summary>
         [Timestamp]
         public byte[] RowVersion { get; set; }
+        #endregion
     }
 }

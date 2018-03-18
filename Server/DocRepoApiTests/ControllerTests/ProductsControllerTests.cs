@@ -15,6 +15,8 @@ namespace DocRepoApiTests.ControllerTests
         /// Mapper test context.
         /// </summary>
         private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
+
+        #region Generate Test Product Data
         /// <summary>
         /// Creates a new ProductDto object for testing.
         /// </summary>
@@ -41,9 +43,43 @@ namespace DocRepoApiTests.ControllerTests
 
             return ProductDtoArray;
         }
+        #endregion
 
+        #region Generate Test Product Version Data
+        /// <summary>
+        /// Creates a new ProductVersionDto object for testing.
+        /// </summary>
+        /// <param name="j">Integer used in the object properties.</param>
+        /// <param name="i">ProductID - 1</param>
+        /// <returns>A single test ProductVersionDto</returns>
+        private ProductVersionDto GetTestProductVersionDto(int j, int i = 0)
+        {
+            return new ProductVersionDto
+            {
+                Id = j + i * 10,
+                Release = $"V{j}",
+                Product = $"My Product {i + 1}",
+                EndOfSupport = DateTime.Today.AddMonths(j)
+            };
+        }
+        private ProductVersionDto[] GetProductVersionDtoArray()
+        {
+            ProductVersionDto[] ProductVersionDtoArray = new ProductVersionDto[10];
 
-        // Get Methods
+            for (int i = 0; i < 10; i++)
+            {
+                ProductVersionDtoArray[i] = GetTestProductVersionDto(i + 11);
+            }
+
+            return ProductVersionDtoArray;
+        }
+        #endregion
+
+        #region Test Product Methods
+
+        #region Test GET Methods
+
+        // GET Methods
         [Fact(DisplayName = "GetProducts() should return a list of all products")]
         public void GetProductsReturnsListOfAuthors()
         {
@@ -112,8 +148,9 @@ namespace DocRepoApiTests.ControllerTests
 
             }
         }
+        #endregion        
 
-        
+        #region Test POST Methods
         // POST Methods
         [Fact(DisplayName = "PostProduct(Product) should create a new Product")]
         public async void PostProductCorrectDataCreatesProduct()
@@ -148,7 +185,7 @@ namespace DocRepoApiTests.ControllerTests
             }
         }        
 
-        [Fact(DisplayName = "PostMultipleProducts(ProductList) should create a muultiple new Products")]
+        [Fact(DisplayName = "PostMultipleProducts(ProductList) should create multiple new Products")]
         public async void PostMultipleProductsCorrectDataCreatesProducts()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -159,7 +196,7 @@ namespace DocRepoApiTests.ControllerTests
                 var result = await controller.PostMultipleProducts(ProductList);
 
                 Assert.NotNull(result);
-                Assert.IsType<NoContentResult>(result);
+                Assert.IsType<CreatedAtActionResult>(result);
 
             }
         }
@@ -179,7 +216,9 @@ namespace DocRepoApiTests.ControllerTests
 
             }
         }
+        #endregion
 
+        #region Test DELETE Methods
         // DELETE Methods
         [Fact(DisplayName = "DeleteProduct(id) should remove the Product from context")]
         public async void DeleteProductIdDeletesProduct()
@@ -224,8 +263,210 @@ namespace DocRepoApiTests.ControllerTests
                 Assert.IsType<BadRequestObjectResult>(result);
 
             }
-        }  
-        
+        }
+        #endregion
 
+        #endregion
+
+        #region Test Product Version Methods
+
+        #region Test GET Methods
+        
+        // Get Methods
+        [Fact(DisplayName = "GetProductVersions() should return a list of all ProductVersions")]
+        public async void GetProductVersionsReturnsListOfAuthors()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                var result = await controller.GetProductVersions(1);
+                ProductVersionDto p3 = GetTestProductVersionDto(3);
+
+                Assert.NotNull(result);
+
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);                
+                Assert.IsAssignableFrom<List<ProductVersionDto>>(okObjectResult.Value);
+                List<ProductVersionDto> resultValue = (List<ProductVersionDto>)okObjectResult.Value;
+                Assert.Equal(10, resultValue.Count());
+                ProductVersionDto p = (ProductVersionDto)resultValue.Where(r => r.Id == 3).FirstOrDefault();
+                Assert.True(p.Equals(p3));
+                Assert.True(p.Equals(p3, true));
+
+            }
+        }
+        
+        [Fact(DisplayName = "GetProductVersion(id) should return the ProductVersion with the the ID")]
+        public async void GetProductVersionByIdReturnsSingleProductVersion()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                var result = await controller.GetProductVersion(1, 3);
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);
+                var resultValue = okObjectResult.Value;
+
+                ProductVersionDto p3 = GetTestProductVersionDto(3);
+
+                Assert.NotNull(resultValue);
+                Assert.IsType<ProductVersionDto>(resultValue);
+                ProductVersionDto p = (ProductVersionDto)resultValue;
+                Assert.True(p.Equals(p3));
+                Assert.True(p.Equals(p3, true));
+            }
+        }
+
+
+        [Fact(DisplayName = "GetProductVersion(wrongId) should return NotFound")]
+        public async void GetProductVersionWithIncorrectIdReturnsNotFound()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                var result = await controller.GetProductVersion(1, 999);
+
+                Assert.IsType<NotFoundResult>(result);
+
+            }
+        }
+
+
+        [Fact(DisplayName = "GetProductVersion(id) with ModelStateError should return BadRequest")]
+        public async void GetProductVersionModelStateErrorReturnsBadRequest()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                controller.ModelState.AddModelError("an error", "some error");
+
+                var result = await controller.GetProductVersion(1, 1);
+
+                Assert.IsType<BadRequestObjectResult>(result);
+
+            }
+        }
+
+        #endregion
+
+        #region Test POST Methods
+
+        // POST Methods
+        [Fact(DisplayName = "PostProductVersion(ProductVersion) should create a new ProductVersion")]
+        public async void PostProductVersionCorrectDataCreatesProductVersion()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                ProductVersionDto p11 = GetTestProductVersionDto(11, 9);
+
+                var result = await controller.PostProductVersion(1, p11);
+
+                Assert.NotNull(result);
+                var resultValue = Assert.IsType<CreatedAtActionResult>(result);
+
+
+            }
+        }
+
+        [Fact(DisplayName = "PostProductVersion(ProductVersion) with ModelStateError should return BadRequest")]
+        public async void PostProductVersionModelStateErrorReturnsBadRequest()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                controller.ModelState.AddModelError("an error", "some error");
+                ProductVersionDto p11 = GetTestProductVersionDto(11);
+
+                var result = await controller.PostProductVersion(1, p11);
+
+                Assert.IsType<BadRequestObjectResult>(result);
+
+            }
+        }
+        
+        [Fact(DisplayName = "PostMultipleProductVersions(ProductVersionList) should create a muultiple new ProductVersions")]
+        public async void PostMultipleProductVersionsCorrectDataCreatesProductVersions()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                IEnumerable<ProductVersionDto> ProductVersionList = Enumerable.Range(101, 10).Select(i => GetTestProductVersionDto(i));
+
+                var result = await controller.PostMultipleProductVersions(1, ProductVersionList);
+
+                Assert.NotNull(result);
+                Assert.IsType<CreatedAtActionResult>(result);
+
+            }
+        }
+
+        [Fact(DisplayName = "PostMultipleProductVersions(ProductVersionList) with ModelStateError should return BadRequest")]
+        public async void PostMultipleProductVersionsModelStateErrorReturnsBadRequest()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                controller.ModelState.AddModelError("an error", "some error");
+                IEnumerable<ProductVersionDto> ProductVersionList = Enumerable.Range(11, 10).Select(i => GetTestProductVersionDto(i));
+
+                var result = await controller.PostMultipleProductVersions(1, ProductVersionList);
+
+                Assert.IsType<BadRequestObjectResult>(result);
+
+            }
+        }
+
+        #endregion
+
+        #region Test DELETE Methods
+
+        // DELETE Methods
+        [Fact(DisplayName = "DeleteProductVersion(id) should remove the ProductVersion from context")]
+        public async void DeleteProductVersionIdDeletesProductVersion()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                var result = await controller.DeleteProductVersion(1, 3);
+                ProductVersionDto p3 = GetTestProductVersionDto(3);
+
+                Assert.NotNull(result);
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);
+                var resultValue = okObjectResult.Value;
+                Assert.Equal(p3, resultValue);
+
+            }
+        }
+
+        [Fact(DisplayName = "DeleteProductVersion(wrongId) should return NotFound")]
+        public async void DeleteProductVersionWithIncorrectIdReturnsNotFound()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                var result = await controller.DeleteProductVersion(1, 999);
+
+                Assert.IsType<NotFoundResult>(result);
+
+            }
+        }
+
+        [Fact(DisplayName = "DeleteProductVersion(id) with ModelStateError should return BadRequest")]
+        public async void DeleteProductVersionModelStateErrorReturnsBadRequest()
+        {
+            using (var context = DbTestContext.GenerateContextWithData())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                controller.ModelState.AddModelError("an error", "some error");
+
+                var result = await controller.DeleteProductVersion(1, 1);
+
+                Assert.IsType<BadRequestObjectResult>(result);
+
+            }
+        }
+
+        #endregion
+
+        #endregion
     }
 }

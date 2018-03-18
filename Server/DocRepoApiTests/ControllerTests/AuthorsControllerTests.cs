@@ -15,6 +15,7 @@ namespace DocRepoApiTests.ControllerTests
         /// Mapper test context.
         /// </summary>
         private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
+        #region Generate Test Author Data
         /// <summary>
         /// Create a single author for testing.
         /// </summary>
@@ -69,6 +70,10 @@ namespace DocRepoApiTests.ControllerTests
 
             return authorDtoArray;
         }
+
+        #endregion
+
+        #region Test GET Methods
 
         // GET Methods
 
@@ -161,6 +166,9 @@ namespace DocRepoApiTests.ControllerTests
 
             }
         }
+
+        #endregion
+
         /*
          * Cannot unit test with InMemoryDB, should be included in integration tests
          * 
@@ -186,6 +194,8 @@ namespace DocRepoApiTests.ControllerTests
              }
          }
          */
+
+        #region Test POST Methods
         // POST Methods
         [Fact(DisplayName = "PostAuthor(Author) should create a new Author")]
         public async void PostAuthorCorrectDataCreatesAuthor()
@@ -231,7 +241,7 @@ namespace DocRepoApiTests.ControllerTests
                 var result = await controller.PostMultipleAuthors(authorList);
 
                 Assert.NotNull(result);
-                Assert.IsType<NoContentResult>(result);
+                Assert.IsType<CreatedAtActionResult>(result);
 
 
             }
@@ -252,6 +262,10 @@ namespace DocRepoApiTests.ControllerTests
 
             }
         }
+
+        #endregion
+
+        #region Test DELETE Methods
 
         // DELETE Methods
         [Fact(DisplayName = "DeleteAuthor(id) should remove the author from context")]
@@ -299,6 +313,6 @@ namespace DocRepoApiTests.ControllerTests
             }
         }
 
-
+        #endregion
     }
 }

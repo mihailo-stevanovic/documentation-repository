@@ -15,6 +15,7 @@ namespace DocRepoApi.Controllers
     [Route("api/v1/Authors")]
     public class AuthorsController : Controller
     {
+        #region Initialization
         private readonly DocRepoContext _context;
         private readonly IMapper _mapper;
 
@@ -22,9 +23,10 @@ namespace DocRepoApi.Controllers
         {
             _context = context;
             _mapper = mapper;
-        }            
+        }
+        #endregion
 
-
+        #region GET
         // GET: api/v1/Authors
         /// <summary>
         /// Returns all authors.
@@ -72,7 +74,9 @@ namespace DocRepoApi.Controllers
 
             return Ok(_mapper.Map<AuthorDto>(author));
         }
+        #endregion
 
+        #region PUT
         // PUT: api/Authors/5
         /// <summary>
         /// Updates an author.
@@ -121,7 +125,9 @@ namespace DocRepoApi.Controllers
 
             return NoContent();
         }
+        #endregion
 
+        #region POST
         // POST: api/v1/Authors
         /// <summary>
         /// Creates a new author.
@@ -165,11 +171,12 @@ namespace DocRepoApi.Controllers
 
             _context.Authors.AddRange(authorReversedList);
             await _context.SaveChangesAsync();
-            
-
-            return NoContent();
+                        
+            return CreatedAtAction("GetAuthors", null, authorReversedList.Select(a => _mapper.Map<AuthorDto>(a)));
         }
+        #endregion
 
+        #region DELETE
         // DELETE: api/Authors/5
         /// <summary>
         /// Deletes an author.
@@ -195,6 +202,7 @@ namespace DocRepoApi.Controllers
 
             return Ok(_mapper.Map<AuthorDto>(author));
         }
+        #endregion
 
         private bool AuthorExists(int id)
         {

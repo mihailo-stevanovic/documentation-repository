@@ -12,6 +12,7 @@ namespace DocRepoApi.Models
     /// </summary>
     public class ProductVersion : IDocRepoEntity<ProductVersion>
     {
+        #region Properties
         /// <summary>
         /// ID of the product version.
         /// </summary>
@@ -38,7 +39,9 @@ namespace DocRepoApi.Models
         /// Link to the related product.
         /// </summary>
         public Product Product { get; set; }
+        #endregion
 
+        #region Methods
         public int CompareTo(ProductVersion other)
         {
             if (other == null)
@@ -94,5 +97,6 @@ namespace DocRepoApi.Models
 
             return true;
         }
+        #endregion
     }
 }

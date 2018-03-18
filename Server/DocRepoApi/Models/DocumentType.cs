@@ -10,8 +10,9 @@ namespace DocRepoApi.Models
     /// <summary>
     /// Represents a specific document type.
     /// </summary>
-    public class DocumentType
+    public class DocumentType : IDocRepoEntity<DocumentType>
     {
+        #region Properties
         /// <summary>
         /// ID of the document type.
         /// </summary>
@@ -33,5 +34,60 @@ namespace DocRepoApi.Models
         /// Category of the document type.
         /// </summary>
         public DocumentCategory DocumentCategory { get; set; }
+        #endregion
+
+        #region Methods
+        public int CompareTo(DocumentType other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+
+            int comparedCategory = this.DocumentCategory.CompareTo(other.DocumentCategory);
+
+            if (comparedCategory == 0)
+            {
+                return this.FullName.CompareTo(other.FullName);
+            }
+
+            return comparedCategory;
+        }
+
+        public bool Equals(DocumentType other)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            return this.Id.Equals(other.Id);
+        }
+
+        public bool Equals(DocumentType other, bool matchAll)
+        {
+            if (!matchAll)
+            {
+                return this.Equals(other);
+            }
+            if (!this.Equals(other))
+            {
+                return false;
+            }
+            if (!this.FullName.Equals(other.FullName))
+            {
+                return false;
+            }
+            if (!this.ShortName.Equals(other.ShortName))
+            {
+                return false;
+            }
+            if (!this.DocumentCategory.Equals(other.DocumentCategory))
+            {
+                return false;
+            }
+
+            return true;
+        }
+        #endregion
     }
 }

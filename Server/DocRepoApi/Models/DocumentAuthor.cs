@@ -12,6 +12,7 @@ namespace DocRepoApi.Models
     /// </summary>
     public class DocumentAuthor
     {
+        #region Properties
         /// <summary>
         /// ID of the document-author link.
         /// </summary>
@@ -34,5 +35,6 @@ namespace DocRepoApi.Models
         /// Link to the related author.
         /// </summary>
         public Author Author { get; set; }
+        #endregion
     }
 }

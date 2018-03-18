@@ -15,6 +15,7 @@ namespace DocRepoApi.Controllers
     [Route("api/v1/products")]
     public class ProductsController : Controller
     {
+        #region Initilization
         private readonly DocRepoContext _context;
         private readonly IMapper _mapper;
 
@@ -23,11 +24,10 @@ namespace DocRepoApi.Controllers
             _context = context;
             _mapper = mapper;
         }
+        #endregion
 
-        /*
-         * GET METHODS
-         */
-
+        #region GET
+        #region Product        
         // GET: api/v1/products
         /// <summary>
         /// Returns all products.
@@ -62,7 +62,9 @@ namespace DocRepoApi.Controllers
 
             return Ok(_mapper.Map<ProductDto>(product));
         }
+        #endregion
 
+        #region Product Versions
         // GET: api/v1/products/5/versions
         /// <summary>
         /// Returns a list of versions associated to a product.
@@ -120,11 +122,11 @@ namespace DocRepoApi.Controllers
 
             return Ok(_mapper.Map<ProductVersionDto>(productVersion));
         }
+        #endregion
+        #endregion
 
-        /*
-         * PUT METHODS
-         */
-
+        #region PUT
+        #region Product         
         // PUT: api/v1/products/5
         /// <summary>
         /// Updates a single product.
@@ -167,7 +169,9 @@ namespace DocRepoApi.Controllers
 
             return NoContent();
         }
+        #endregion
 
+        #region Product Version
         // PUT: api/v1/products/5/versions/5
         /// <summary>
         /// Updates a version of a product.
@@ -216,11 +220,11 @@ namespace DocRepoApi.Controllers
 
             return NoContent();
         }
+        #endregion
+        #endregion
 
-
-        /*
-         * POST METHODS
-         */
+        #region POST
+        #region Product 
         /// <summary>
         /// Creates a product.
         /// </summary>
@@ -266,6 +270,9 @@ namespace DocRepoApi.Controllers
 
             return CreatedAtAction("GetProducts", null, ProductReversedList.Select(p => _mapper.Map<ProductDto>(p)));
         }
+        #endregion
+
+        #region Product Version
         // POST: api/v1/products/5/versions/
         /// <summary>
         /// Creates a new version of a product.
@@ -333,12 +340,11 @@ namespace DocRepoApi.Controllers
 
             return CreatedAtAction("GetProductVersions", new { productId = product.Id }, productVersionListReversed.Select(p => _mapper.Map<ProductVersionDto>(p)));
         }
+        #endregion
+        #endregion
 
-
-        /*
-         * DELETE METHODS
-         */
-
+        #region DELETE
+        #region Product 
         // DELETE: api/v1/products/5
         /// <summary>
         /// Deletes a product.
@@ -364,7 +370,9 @@ namespace DocRepoApi.Controllers
 
             return Ok(_mapper.Map<ProductDto>(product));
         }
+        #endregion
 
+        #region Product Version
         // DELETE: api/v1/products/5/versions/5
         /// <summary>
         /// Deletes a product version.
@@ -396,7 +404,8 @@ namespace DocRepoApi.Controllers
 
             return Ok(_mapper.Map<ProductVersionDto>(productVersion));
         }
-        
+        #endregion
+        #endregion
         private bool ProductExists(int id)
         {
             return _context.Products.Any(e => e.Id == id);

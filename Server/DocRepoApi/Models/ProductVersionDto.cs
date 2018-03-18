@@ -11,6 +11,7 @@ namespace DocRepoApi.Models
     /// </summary>
     public class ProductVersionDto : IDocRepoEntity<ProductVersionDto>
     {
+        #region Properties
         /// <summary>
         /// ID of the product version.
         /// </summary>        
@@ -37,7 +38,9 @@ namespace DocRepoApi.Models
         {
             get { return EndOfSupport > DateTime.Today; }
         }
+        #endregion
 
+        #region Methods
         public override bool Equals(object obj)
         {
             var other = obj as ProductVersionDto;
@@ -109,5 +112,6 @@ namespace DocRepoApi.Models
 
             return true;
         }
+        #endregion
     }
 }

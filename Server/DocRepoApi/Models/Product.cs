@@ -12,6 +12,7 @@ namespace DocRepoApi.Models
     /// </summary>
     public class Product : IDocRepoEntity<Product>
     {
+        #region Properties
         /// <summary>
         /// Id of the product.
         /// </summary>
@@ -33,7 +34,9 @@ namespace DocRepoApi.Models
         /// Used for old product names.
         /// </summary>
         public string Alias { get; set; }
+        #endregion
 
+        #region Methods
         public int CompareTo(Product other)
         {
             if (other == null)
@@ -81,5 +84,6 @@ namespace DocRepoApi.Models
             return true;
 
         }
+        #endregion
     }
 }

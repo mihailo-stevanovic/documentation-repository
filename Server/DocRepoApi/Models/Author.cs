@@ -12,6 +12,7 @@ namespace DocRepoApi.Models
     /// </summary>
     public class Author : IDocRepoEntity<Author>
     {
+        #region Properties
         /// <summary>
         /// ID of the author.
         /// </summary>
@@ -58,7 +59,9 @@ namespace DocRepoApi.Models
         /// Documents linked to the author.
         /// </summary>
         public ICollection<DocumentAuthor> DocumentsAuthored { get; set; }
+        #endregion
 
+        #region Methods
         public int CompareTo(Author other)
         {
             if (other == null)
@@ -113,5 +116,6 @@ namespace DocRepoApi.Models
 
             return true;
         }
+        #endregion
     }
 }
