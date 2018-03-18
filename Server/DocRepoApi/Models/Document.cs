@@ -45,11 +45,16 @@ namespace DocRepoApi.Models
         /// </summary>
         [Display(Name = "Fit for clients")]
         public bool IsFitForClients { get; set; }
+
+        /* 
+         * To be used in the DTO class
         /// <summary>
         /// Name of the client catalog where the document is available on.
-        /// </summary>
-        [DisplayFormat(NullDisplayText = "N/A")]
+        /// </summary>        
+        DisplayFormat(NullDisplayText = "N/A")]
         public string ClientCatalog { get; set; }
+            */
+
         /// <summary>
         /// Short description of the document.
         /// </summary>
@@ -63,6 +68,11 @@ namespace DocRepoApi.Models
         /// Link to the related authors.
         /// </summary>
         public ICollection<DocumentAuthor> DocumentAuthors { get; set; }
+
+        /// <summary>
+        /// Link to the related client catalogs.
+        /// </summary>
+        public ICollection<DocumentCatalog> DocumentCatalogs { get; set; }
 
         // Should be handleded differently
         //// Foreign Key
@@ -101,7 +111,8 @@ namespace DocRepoApi.Models
         /// <summary>
         /// Link to the related document type.
         /// </summary>
-        public DocumentType DocumentType { get; set; }
+        public DocumentType DocumentType { get; set; }              
+
         /// <summary>
         /// Used to prevent DB concurrency issues during updates.
         /// </summary>

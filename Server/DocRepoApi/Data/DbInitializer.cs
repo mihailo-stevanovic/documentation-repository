@@ -36,6 +36,32 @@ namespace DocRepoApi.Data
                 context.SaveChanges();
             }
 
+            var clientCatalogs = new ClientCatalog[]
+                {
+                    new ClientCatalog { Name = "eFront Invest - Release Notes" },
+                    new ClientCatalog { Name = "eFront Portfolio Monitoring" },
+                    new ClientCatalog { Name = "eFront PEO/VC" },
+                    new ClientCatalog { Name = "eFront Mobile" },
+                    new ClientCatalog { Name = "eFront Outlook" },
+                    new ClientCatalog { Name = "eFront Investment Café" },
+                    new ClientCatalog { Name = "Investment Café Classic" },
+                    new ClientCatalog { Name = "eFront Insight" },
+                    new ClientCatalog { Name = "GP/LP - Tools" },
+                    new ClientCatalog { Name = "eFront Data Warehouse" }
+                };
+
+            if (context.ClientCatalogs.Count() < 10)
+            {               
+
+                foreach (ClientCatalog cat in clientCatalogs)
+                {
+                    context.ClientCatalogs.Add(cat);
+                }
+
+                context.SaveChanges();
+            }
+
+            
 
             if (context.DocumentTypes.Count() < 9)
             {
@@ -97,13 +123,17 @@ namespace DocRepoApi.Data
                 PdfLink = "eFrontPM/ReleaseNotes/eFrontPM_ReleaseNotes_V2018-1.pdf",
                 DocumentTypeId = 9,
                 IsFitForClients = true,
-                ProductVersionId = 14,
-                ClientCatalog = "eFront Portfolio Monitoring",
+                ProductVersionId = 14,                
                 DocumentAuthors =
                 {
                     new DocumentAuthor {Author = authors[0]},
                     new DocumentAuthor {Author = authors[1]},
+                },
+                DocumentCatalogs =
+                {
+                    new DocumentCatalog { Catalog =  clientCatalogs[1] }
                 }
+
             };
             context.Documents.Add(doc1);
 
@@ -114,14 +144,18 @@ namespace DocRepoApi.Data
                 PdfLink = "eFrontMobile/ReleaseNotes/eFrontMobile_ReleaseNotes_V2018-1.pdf",
                 DocumentTypeId = 9,
                 IsFitForClients = true,
-                ProductVersionId = 22,
-                ClientCatalog = "eFront Mobile",
+                ProductVersionId = 22,                
                 DocumentAuthors =
                 {
                     new DocumentAuthor {Author = authors[0]},
                     new DocumentAuthor {Author = authors[2]},
                     new DocumentAuthor {Author = authors[3]},
-                }                
+                },
+                DocumentCatalogs =
+                {
+                    new DocumentCatalog { Catalog =  clientCatalogs[0] },
+                    new DocumentCatalog { Catalog =  clientCatalogs[3] }
+                }
             };
             context.Documents.Add(doc2);
 

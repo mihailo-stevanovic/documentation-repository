@@ -15,8 +15,10 @@ namespace DocRepoApi.Data
         }
 
         public DbSet<Author> Authors { get; set; }
+        public DbSet<ClientCatalog> ClientCatalogs { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<DocumentAuthor> DocumentAuthors { get; set; }
+        public DbSet<DocumentCatalog> DocumentCatalogs { get; set; }
         public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<DocumentUpdate> DocumentUpdates { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -26,8 +28,10 @@ namespace DocRepoApi.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Author>().ToTable("Author");
+            modelBuilder.Entity<ClientCatalog>().ToTable("ClientCatalog");
             modelBuilder.Entity<Document>().ToTable("Document");
             modelBuilder.Entity<DocumentAuthor>().ToTable("DocumentAuthor");
+            modelBuilder.Entity<DocumentCatalog>().ToTable("DocumentCatalog");
             modelBuilder.Entity<DocumentType>().ToTable("DocumentType");
             modelBuilder.Entity<DocumentUpdate>().ToTable("DocumentUpdate");
             modelBuilder.Entity<Product>().ToTable("Product");
