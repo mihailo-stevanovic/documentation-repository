@@ -1,4 +1,5 @@
-﻿using DocRepoApi.Models;
+﻿using AutoMapper;
+using DocRepoApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,8 +8,10 @@ using Xunit;
 namespace DocRepoApiTests.ModelTests
 {
     public class AuthorDtoTests
-    {                
-        
+    {
+
+        private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
+
         [Fact(DisplayName = "AuthorDto.Equals(other) should math based on id and all properties")]
         public void AuthorEqualsReturnsCorrectValues()
         {
@@ -90,7 +93,71 @@ namespace DocRepoApiTests.ModelTests
             Assert.True(authors[6].Id.Equals(8));
             Assert.True(authors[7].Id.Equals(5));
 
-        }        
-        
+        }
+
+        [Fact(DisplayName = "Author is properly mapped to AuthorDto")]
+        public void AuthorProperlyMappedToAuthorDto()
+        {
+            AuthorDto aDto1 = new AuthorDto
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                AitName = "Tech",
+                FirstName = "Tech",
+                LastName = "Writer",
+                Email = "tech@writer.com",
+                IsFormerAuthor = false
+            };
+
+            Author a1 = new Author
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                AitName = "Tech",
+                FirstName = "Tech",
+                LastName = "Writer",
+                Email = "tech@writer.com",
+                IsFormerAuthor = false
+            };
+
+            AuthorDto aDto2 = _mapper.Map<AuthorDto>(a1);
+
+            Assert.NotNull(aDto2);
+            Assert.True(aDto1.Equals(aDto2));
+            Assert.True(aDto1.Equals(aDto2, true));
+        }
+
+        [Fact(DisplayName = "AuthorDto is properly reversed to Author")]
+        public void AuthorDtoProperlyReversedToAuthor()
+        {
+            AuthorDto aDto1 = new AuthorDto
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                AitName = "Tech",
+                FirstName = "Tech",
+                LastName = "Writer",
+                Email = "tech@writer.com",
+                IsFormerAuthor = false
+            };
+
+            Author a1 = new Author
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                AitName = "Tech",
+                FirstName = "Tech",
+                LastName = "Writer",
+                Email = "tech@writer.com",
+                IsFormerAuthor = false
+            };
+
+            Author a2 = _mapper.Map<Author>(aDto1);
+
+            Assert.NotNull(a2);
+            Assert.True(a1.Equals(a2));
+            Assert.True(a1.Equals(a2, true));
+        }
+
     }
 }

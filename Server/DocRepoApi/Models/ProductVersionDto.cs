@@ -1,51 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DocRepoApi.Models
 {
     /// <summary>
-    /// Represent a release of a product.
+    /// Represents a DTO class of the ProductVersion class.
     /// </summary>
-    public class ProductVersion : IDocRepoEntity<ProductVersion>
+    public class ProductVersionDto : IDocRepoEntity<ProductVersionDto>
     {
         /// <summary>
         /// ID of the product version.
-        /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        /// </summary>        
         public int Id { get; set; }
+        /// <summary>
+        /// Marketing name of the product.
+        /// </summary>
+        public string Product { get; set; }
         /// <summary>
         /// Release version of the product.
         /// </summary>
-        [Required]
+        [Required(AllowEmptyStrings = false)]
         [StringLength(10, ErrorMessage = "The Release cannot be longer than 10 characters.")]
         public string Release { get; set; }
         /// <summary>
         /// End of support date.
         /// </summary>
         [DataType(DataType.Date)]
-        public DateTime EndOfSupport { get; set; }     
-        // Foreign Key
+        public DateTime EndOfSupport { get; set; }
         /// <summary>
-        /// Id of the related product.
+        /// True if the version is still supported.
         /// </summary>
-        public int ProductId { get; set; }
-        /// <summary>
-        /// Link to the related product.
-        /// </summary>
-        public Product Product { get; set; }
+        public bool IsSupported
+        {
+            get { return EndOfSupport > DateTime.Today; }
+        }
 
-        public int CompareTo(ProductVersion other)
+        public override bool Equals(object obj)
+        {
+            var other = obj as ProductVersionDto;
+            if (other == null)
+            {
+                return false;
+            }
+            return this.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public int CompareTo(ProductVersionDto other)
         {
             if (other == null)
             {
                 return 1;
             }
-            else
+            else 
             {
                 int comparedFullName = this.Product.CompareTo(other.Product);
 
@@ -58,9 +72,10 @@ namespace DocRepoApi.Models
                     return comparedFullName;
                 }
             }
+            
         }
 
-        public bool Equals(ProductVersion other)
+        public bool Equals(ProductVersionDto other)
         {
             if (other == null)
             {
@@ -69,7 +84,7 @@ namespace DocRepoApi.Models
             return this.Id.Equals(other.Id);
         }
 
-        public bool Equals(ProductVersion other, bool matchAll)
+        public bool Equals(ProductVersionDto other, bool matchAll)
         {
             if (!matchAll)
             {

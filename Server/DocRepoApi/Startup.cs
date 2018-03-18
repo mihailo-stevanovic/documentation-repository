@@ -51,6 +51,7 @@ namespace DocRepoApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
@@ -59,7 +60,7 @@ namespace DocRepoApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Doc Repo API V1");
             });
-
+            
             app.UseMvc();
         }
     }

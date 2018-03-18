@@ -12,6 +12,8 @@ namespace DocRepoApi.Models
         {
             CreateMap<Author, AuthorDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<ProductVersion, ProductVersionDto>().ForMember(d => d.Product, opt => opt.MapFrom(src => src.Product.FullName))
+                .ReverseMap().ForPath(s => s.Product, opt => opt.Ignore());
         }
     }
 }

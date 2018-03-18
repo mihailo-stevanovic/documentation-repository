@@ -10,7 +10,7 @@ namespace DocRepoApi.Models
     /// <summary>
     /// Represents a DTO class for the Author class.
     /// </summary>
-    public class AuthorDto : IEquatable<AuthorDto>, IComparable<AuthorDto>
+    public class AuthorDto : IDocRepoEntity<AuthorDto>
     {
         /// <summary>
         /// ID of the author.
@@ -50,6 +50,16 @@ namespace DocRepoApi.Models
         [StringLength(10, ErrorMessage = "AIT Name cannot be longer than 10 characters.")]
         [MinLength(4)]
         public string AitName { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as AuthorDto;
+            if (other == null)
+            {
+                return false;
+            }
+            return this.Equals(other);
+        }
 
         public int CompareTo(AuthorDto other)
         {
@@ -104,6 +114,11 @@ namespace DocRepoApi.Models
             }
 
             return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

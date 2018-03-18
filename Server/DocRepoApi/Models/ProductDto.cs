@@ -9,7 +9,7 @@ namespace DocRepoApi.Models
     /// <summary>
     /// Represents a DTO class of the Product class.
     /// </summary>
-    public class ProductDto : IEquatable<ProductDto>, IComparable<ProductDto>
+    public class ProductDto : IDocRepoEntity<ProductDto>
     {
         /// <summary>
         /// Id of the product.
@@ -31,6 +31,21 @@ namespace DocRepoApi.Models
         /// </summary>        
         [MinLength(4)]
         public string Alias { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as ProductDto;
+            if (other == null)
+            {
+                return false;
+            }
+            return this.Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
 
         public int CompareTo(ProductDto other)
         {

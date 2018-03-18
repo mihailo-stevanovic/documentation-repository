@@ -46,7 +46,23 @@ namespace DocRepoApiTests
 
             context.Products.AddRange(products);
 
+            // Create and add test products
             
+
+            for (int i = 0; i < 10; i++)
+            {
+                var productVersions = Enumerable.Range(1, 10)
+                .Select(j => new ProductVersion
+                {
+                    Id = j + i * 10,
+                    Release = $"V{j}",
+                    ProductId = i + 1,
+                    EndOfSupport = DateTime.Today.AddMonths(j)
+                });
+
+                context.ProductVersions.AddRange(productVersions);
+            }                       
+
             context.SaveChanges();
             return context;
         }

@@ -1,4 +1,5 @@
-﻿using DocRepoApi.Models;
+﻿using AutoMapper;
+using DocRepoApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,8 @@ namespace DocRepoApiTests.ModelTests
 {
     public class ProductDtoTests
     {
+        private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
+
         [Fact(DisplayName = "ProductDto.Equals(other) should math based on id and all properties")]
         public void ProductDtoEqualsReturnsCorrectValues()
         {
@@ -74,6 +77,56 @@ namespace DocRepoApiTests.ModelTests
             Assert.True(products[6].Id.Equals(8));
             Assert.True(products[7].Id.Equals(5));
 
+        }
+
+        [Fact(DisplayName = "Product is properly mapped to ProductDto")]
+        public void ProductProperlyMappedToProductDto()
+        {
+            ProductDto pDto1 = new ProductDto
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                FullName = "Great Product",
+                ShortName = "GP"
+            };
+            Product p1 = new Product
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                FullName = "Great Product",
+                ShortName = "GP"
+            };
+
+            ProductDto pDto2 = _mapper.Map<ProductDto>(p1);
+
+            Assert.NotNull(pDto2);
+            Assert.True(pDto1.Equals(pDto2));
+            Assert.True(pDto1.Equals(pDto2, true));
+        }
+
+        [Fact(DisplayName = "ProductDto is properly reversed to Product")]
+        public void ProductDtoProperlyReversedToProduct()
+        {
+            ProductDto pDto1 = new ProductDto
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                FullName = "Great Product",
+                ShortName = "GP"
+            };
+            Product p1 = new Product
+            {
+                Id = 1,
+                Alias = "ALIAS",
+                FullName = "Great Product",
+                ShortName = "GP"
+            };
+
+            Product p2 = _mapper.Map<Product>(pDto1);
+
+            Assert.NotNull(p2);
+            Assert.True(p1.Equals(p2));
+            Assert.True(p1.Equals(p2, true));
         }
     }
 }
