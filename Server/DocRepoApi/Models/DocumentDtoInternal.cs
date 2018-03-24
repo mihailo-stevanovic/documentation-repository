@@ -47,12 +47,7 @@ namespace DocRepoApi.Models
         /// <summary>
         /// Is document available for clients.
         /// </summary>        
-        public bool IsFitForClients { get; set; }                
-        /// <summary>
-        /// Name of the client catalog where the document is available on.
-        /// </summary>        
-        [DisplayFormat(NullDisplayText = "N/A")]
-        public string ClientCatalog { get; set; }            
+        public bool IsFitForClients { get; set; }                                  
         /// <summary>
         /// Short description of the document.
         /// </summary>

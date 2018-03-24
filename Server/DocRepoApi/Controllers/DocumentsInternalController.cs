@@ -26,20 +26,22 @@ namespace DocRepoApi.Controllers
 
         // GET: api/DocumentsInternal
         /// <summary>
-        /// Returns the list of published documents.
+        /// Returns a list of published documents.
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public IEnumerable<DocumentDtoInternal> GetDocuments(int number = 20)
         {
-            return _context.Documents
+            var documents =  _context.Documents
                 .Include(d => d.DocumentAuthors).ThenInclude(da => da.Author)
                 .Include(d => d.DocumentCatalogs).ThenInclude(dc => dc.Catalog)
                 .Include(d => d.DocumentType)
                 .Include(d => d.Updates)
                 .Include(d => d.ProductVersion)
-                .Take(number)
+                .Include(d => d.ProductVersion.Product)
                 .Select(d => _mapper.Map<DocumentDtoInternal>(d));
+
+            return documents.OrderByDescending(d => d.LatestUpdate).Take(number);
         }
 
         // GET: api/DocumentsInternal/5
@@ -57,6 +59,7 @@ namespace DocRepoApi.Controllers
                 .Include(d => d.DocumentType)
                 .Include(d => d.Updates)
                 .Include(d => d.ProductVersion)
+                .Include(d => d.ProductVersion.Product)
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (document == null)
