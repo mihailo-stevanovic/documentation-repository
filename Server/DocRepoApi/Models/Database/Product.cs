@@ -25,7 +25,7 @@ namespace DocRepoApi.Models
         [Required]
         public string FullName { get; set; }
         /// <summary>
-        /// Short name of the product (e.g. FPM, FIA, etc.)
+        /// Short name of the product
         /// </summary>
         [Required]
         [StringLength(7, ErrorMessage = "The Short name cannot be longer than 7 characters.")]
