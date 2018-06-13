@@ -31,12 +31,23 @@ namespace DocRepoApi.Controllers
         /// <summary>
         /// Returns all authors.
         /// </summary>
-        /// <returns>A list of authors.</returns>
+        /// <returns>List of authors.</returns>
+        /// <response code="200">Authors successfully retrieved.</response>
+        /// <response code="404">No authors were found.</response>
         [HttpGet]
-        public IEnumerable<AuthorDto> GetAuthors()
+        [ProducesResponseType(typeof(IEnumerable<AuthorDto>), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult GetAuthors()
         {           
 
-            return _context.Authors.Select(a => _mapper.Map<AuthorDto>(a));
+            var authors = _context.Authors.Select(a => _mapper.Map<AuthorDto>(a));
+
+            if (!authors.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(authors);
 
         }
 
@@ -44,11 +55,22 @@ namespace DocRepoApi.Controllers
         /// <summary>
         /// Returns all active authors. Former authors are excluded.
         /// </summary>        
-        /// <returns></returns>
+        /// <returns>List of active authors or Not Found error.</returns>
+        /// <response code="200">Authors successfully retrieved.</response>
+        /// <response code="404">No active authors were found.</response>
         [HttpGet("Active")]
-        public IEnumerable<AuthorDto> GetActiveAuthors()
+        [ProducesResponseType(typeof(IEnumerable<AuthorDto>), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult GetActiveAuthors()
         {         
-            return _context.Authors.Where(a => !a.IsFormerAuthor).Select(a => _mapper.Map<AuthorDto>(a));
+            var authors =  _context.Authors.Where(a => !a.IsFormerAuthor).Select(a => _mapper.Map<AuthorDto>(a));
+
+            if (!authors.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(authors);
         }
 
         // GET: api/v1/Authors/5
@@ -56,8 +78,14 @@ namespace DocRepoApi.Controllers
         /// Returns a single author.
         /// </summary>
         /// <param name="id">ID of the author.</param>
-        /// <returns></returns>
+        /// <returns>Author object or description of error.</returns>
+        /// <response code="200">Author successfully returned.</response>
+        /// <response code="400">Invalid request.</response>
+        /// <response code="404">Author with a matching ID could not be found.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(AuthorDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetAuthor([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -83,15 +111,16 @@ namespace DocRepoApi.Controllers
         /// </summary>
         /// <param name="id">ID of the author.</param>
         /// <param name="author">Updated author.</param>
-        /// <returns></returns>
+        /// <returns>Empty body or description of error.</returns>
         /// <response code="204">Update is successuful.</response>
-        /// <response code="400">Request is incorrect or id from the path does not match the id of the author.</response>
+        /// <response code="400">Request is incorrect or ID from the path does not match the ID of the author.</response>
         /// <response code="404">Author does not exist.</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> PutAuthor([FromRoute] int id, [FromBody] AuthorDto author)
-        {
-            
-
+        {            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -99,7 +128,8 @@ namespace DocRepoApi.Controllers
 
             if (id != author.Id)
             {
-                return BadRequest();
+                ModelState.AddModelError("Invalid Author ID", "The Author ID supplied in the query and the body of the request do not match.");
+                return BadRequest(ModelState);
             }
 
             var authorReversed = _mapper.Map<Author>(author);
@@ -111,7 +141,7 @@ namespace DocRepoApi.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException xcp)
             {
                 if (!AuthorExists(id))
                 {
@@ -119,7 +149,8 @@ namespace DocRepoApi.Controllers
                 }
                 else
                 {
-                    throw;
+                    ModelState.AddModelError("Error", xcp.ToString());
+                    return BadRequest(ModelState);
                 }
             }
 
@@ -132,10 +163,13 @@ namespace DocRepoApi.Controllers
         /// <summary>
         /// Creates a new author.
         /// </summary>
-        /// <param name="author"></param>
-        /// <returns></returns>
+        /// <param name="author">New author object.</param>
+        /// <returns>Author object or description of error.</returns>
         /// <response code="201">Returns the newly created author.</response>
+        /// <response code="400">Invalid request.</response>
         [HttpPost]
+        [ProducesResponseType(typeof(AuthorDto), 201)]
+        [ProducesResponseType(400)]        
         public async Task<IActionResult> PostAuthor([FromBody] AuthorDto author)
         {            
 
@@ -157,9 +191,12 @@ namespace DocRepoApi.Controllers
         /// Creates multiple authors.
         /// </summary>
         /// <param name="AuthorList">List of authors.</param>
-        /// <returns></returns>
-        /// <response code="204">Action is successful.</response>
+        /// <returns>List of author objects or description of error.</returns>
+        /// <response code="201">Action is successful.</response>
+        /// <response code="400">Invalid request.</response>
         [HttpPost("Batch")]
+        [ProducesResponseType(typeof(IEnumerable<AuthorDto>), 201)]
+        [ProducesResponseType(400)]        
         public async Task<IActionResult> PostMultipleAuthors([FromBody] IEnumerable<AuthorDto> AuthorList)
         {
             if (!ModelState.IsValid)
@@ -182,8 +219,14 @@ namespace DocRepoApi.Controllers
         /// Deletes an author.
         /// </summary>
         /// <param name="id">ID of the author to be deleted.</param>
-        /// <returns></returns>
+        /// <returns>Deleted author object or description of error.</returns>
+        /// <response code="200">Author sucessufully deleted.</response>
+        /// <response code="400">Invalid request.</response>
+        /// <response code="404">Author with the provided ID could not be found.</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(AuthorDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteAuthor([FromRoute] int id)
         {
             if (!ModelState.IsValid)

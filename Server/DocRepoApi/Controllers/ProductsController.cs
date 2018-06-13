@@ -12,7 +12,7 @@ using AutoMapper;
 namespace DocRepoApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/v1/products")]
+    [Route("api/v1/Products")]
     public class ProductsController : Controller
     {
         #region Initilization
@@ -28,24 +28,41 @@ namespace DocRepoApi.Controllers
 
         #region GET
         #region Product        
-        // GET: api/v1/products
+        // GET: api/v1/Products
         /// <summary>
         /// Returns all products.
         /// </summary>
-        /// <returns>List of all products.</returns>
+        /// <returns>List of products or description of error.</returns>
+        /// <response code="200">Products successfully retrieved.</response>
+        /// <response code="404">No products were found.</response>
         [HttpGet]
-        public IEnumerable<ProductDto> GetProducts()
+        [ProducesResponseType(typeof(IEnumerable<ProductDto>), 200)]
+        [ProducesResponseType(404)]
+        public IActionResult GetProducts()
         {
-            return _context.Products.Select(p => _mapper.Map<ProductDto>(p));
+            var products = _context.Products.Select(p => _mapper.Map<ProductDto>(p));
+
+            if (!products.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(products);
         }
 
-        // GET: api/v1/products/5
+        // GET: api/v1/Products/5
         /// <summary>
         /// Returns a single product by ID.
         /// </summary>
         /// <param name="id">ID of the product.</param>
-        /// <returns>A single product.</returns>
+        /// <returns>A single product or description of error.</returns>
+        /// <response code="200">Product successfully retrieved.</response>
+        /// <response code="400">Invalid request.</response>
+        /// <response code="404">Products with matching ID not found.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetProduct([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -65,47 +82,60 @@ namespace DocRepoApi.Controllers
         #endregion
 
         #region Product Versions
-        // GET: api/v1/products/5/versions
+        // GET: api/v1/Products/5/Versions
         /// <summary>
         /// Returns a list of versions associated to a product.
         /// </summary>
         /// <param name="productId">ID of the product.</param>
         /// <returns>List of product versions.</returns>
-        [HttpGet("{productId}/versions")]
+        /// <response code="200">Product versions successfully retrieved.</response>
+        /// <response code="400">Invalid request.</response>
+        /// <response code="404">Products versions with matching product ID not found.</response>
+        [HttpGet("{productId}/Versions")]
+        [ProducesResponseType(typeof(IEnumerable<ProductVersionDto>), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetProductVersions([FromRoute] int productId)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+            
+            if (!ProductExists(productId))
+            {
+                ModelState.AddModelError("Invalid Product ID", "The Product ID supplied in the does not match an existing product.");
+                return BadRequest(ModelState);
+            }
 
-            var product = await _context.Products.SingleOrDefaultAsync(m => m.Id == productId);
+            var productVersions = await _context.ProductVersions
+                .Where(pv => pv.ProductId == productId)
+                .Include(pv => pv.Product)
+                .OrderByDescending(pv => pv.Release)                         
+                .ToListAsync();
 
-            if (product == null)
+            if (!productVersions.Any())
             {
                 return NotFound();
-            }
+            }                        
 
-            var productVersions = _context.ProductVersions.Where(pv => pv.ProductId == product.Id).Select(pv => _mapper.Map<ProductVersionDto>(pv)).ToList();
-
-            foreach (ProductVersionDto pv in productVersions)
-            {
-                pv.Product = product.FullName;
-            }
-
-            productVersions.Sort();
-
-            return Ok(productVersions);
+            return Ok(productVersions.Select(pv => _mapper.Map<ProductVersionDto>(pv)));
         }
 
-        // GET: api/products/5/versions/5
+        // GET: api/v1/Products/5/Versions/5
         /// <summary>
         /// Returns a single version associated to a product.
         /// </summary>
         /// <param name="productId">ID of the product.</param>
         /// <param name="versionId">ID of the version.</param>
-        /// <returns></returns>
-        [HttpGet("{productId}/versions/{versionId}")]
+        /// <returns>A single product version or description of error.</returns>
+        /// <response code="200">Product version successfully retrieved.</response>
+        /// <response code="400">Invalid request.</response>
+        /// <response code="404">Product versions with matching ID not found.</response>
+        [HttpGet("{productId}/Versions/{versionId}")]
+        [ProducesResponseType(typeof(ProductVersionDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> GetProductVersion([FromRoute] int productId, [FromRoute] int versionId)
         {
             if (!ModelState.IsValid)
@@ -113,7 +143,15 @@ namespace DocRepoApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var productVersion = await _context.ProductVersions.Include(p => p.Product).SingleOrDefaultAsync(m => m.ProductId == productId && m.Id == versionId);
+            if (!ProductExists(productId))
+            {
+                ModelState.AddModelError("Invalid Product ID", "The Product ID supplied in the does not match an existing product.");
+                return BadRequest(ModelState);
+            }
+
+            var productVersion = await _context.ProductVersions
+                .Include(p => p.Product)
+                .SingleOrDefaultAsync(m => m.ProductId == productId && m.Id == versionId);
 
             if (productVersion == null)
             {
@@ -127,14 +165,20 @@ namespace DocRepoApi.Controllers
 
         #region PUT
         #region Product         
-        // PUT: api/v1/products/5
+        // PUT: api/v1/Products/5
         /// <summary>
         /// Updates a single product.
         /// </summary>
         /// <param name="id">ID of the product.</param>
         /// <param name="product">Product object.</param>
-        /// <returns></returns>
+        /// <returns>Empty body or description of error.</returns>
+        /// <response code="204">Update is successuful.</response>
+        /// <response code="400">Request is incorrect or ID from the path does not match the ID of the product.</response>
+        /// <response code="404">Product does not exist.</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> PutProduct([FromRoute] int id, [FromBody] ProductDto product)
         {
             if (!ModelState.IsValid)
@@ -144,7 +188,8 @@ namespace DocRepoApi.Controllers
 
             if (id != product.Id)
             {
-                return BadRequest();
+                ModelState.AddModelError("Invalid Product ID", "The Product ID supplied in the query and the body of the request do not match.");
+                return BadRequest(ModelState);
             }
 
             var productReversed = _mapper.Map<Product>(product);
@@ -155,7 +200,7 @@ namespace DocRepoApi.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException xcp)
             {
                 if (!ProductExists(id))
                 {
@@ -163,7 +208,8 @@ namespace DocRepoApi.Controllers
                 }
                 else
                 {
-                    throw;
+                    ModelState.AddModelError("Error", xcp.ToString());
+                    return BadRequest(ModelState);
                 }
             }
 
@@ -179,8 +225,14 @@ namespace DocRepoApi.Controllers
         /// <param name="productId">ID of the product.</param>
         /// <param name="versionId">ID of the version.</param>
         /// <param name="productVersion">Product version object.</param>
-        /// <returns></returns>
-        [HttpPut("{productId}/versions/{versionId}")]
+        /// <returns>Empty body or description of error.</returns>
+        /// <response code="204">Update is successuful.</response>
+        /// <response code="400">Request is incorrect or ID from the path does not match the ID of the product version.</response>
+        /// <response code="404">Product version does not exist.</response>
+        [HttpPut("{productId}/Versions/{versionId}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> PutProductVersion([FromRoute] int productId, [FromRoute] int versionId, [FromBody] ProductVersionDto productVersion)
         {
             if (!ModelState.IsValid)
@@ -189,11 +241,13 @@ namespace DocRepoApi.Controllers
             }
             if (versionId != productVersion.Id)
             {
-                return BadRequest("Version ID from the route does not match the ID from the version object.");
-            }
+                ModelState.AddModelError("Invalid Version ID", "The Version ID supplied in the query and the body of the request do not match.");
+                return BadRequest(ModelState);
+            }            
             if (!ProductExists(productId))
             {
-                return BadRequest("Invalid product.");
+                ModelState.AddModelError("Invalid Product", "The product does not exist.");
+                return BadRequest(ModelState);
             }
 
             var productVersionReversed = _mapper.Map<ProductVersion>(productVersion);
@@ -206,7 +260,7 @@ namespace DocRepoApi.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException xcp)
             {
                 if (!ProductVersionExists(versionId))
                 {
@@ -214,7 +268,8 @@ namespace DocRepoApi.Controllers
                 }
                 else
                 {
-                    throw;
+                    ModelState.AddModelError("Error", xcp.ToString());
+                    return BadRequest(ModelState);
                 }
             }
 
@@ -225,13 +280,17 @@ namespace DocRepoApi.Controllers
 
         #region POST
         #region Product 
+        // POST: api/v1/Products
         /// <summary>
         /// Creates a product.
         /// </summary>
         /// <param name="product">Product object.</param>
-        /// <returns></returns>
-        // POST: api/v1/products
+        /// <returns>Product object or description of error.</returns>
+        /// <response code="201">Returns the newly created product.</response>
+        /// <response code="400">Invalid request.</response>
         [HttpPost]
+        [ProducesResponseType(typeof(ProductDto), 201)]
+        [ProducesResponseType(400)]        
         public async Task<IActionResult> PostProduct([FromBody] ProductDto product)
         {
             if (!ModelState.IsValid)
@@ -247,13 +306,17 @@ namespace DocRepoApi.Controllers
             return CreatedAtAction("GetProduct", new { id = productReversed.Id }, _mapper.Map<ProductDto>(productReversed));
         }
 
-        // POST: api/v1/products/batch
+        // POST: api/v1/Products/Batch
         /// <summary>
         /// Creates multiple products.
         /// </summary>
         /// <param name="ProductList">List of product objects.</param>
-        /// <returns></returns>
-        [HttpPost("batch")]
+        /// <returns>List of product objects or description of error.</returns>
+        /// <response code="201">Action is successful.</response>
+        /// <response code="400">Invalid request.</response>
+        [HttpPost("Batch")]
+        [ProducesResponseType(typeof(IEnumerable<ProductDto>), 201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> PostMultipleProducts([FromBody] IEnumerable<ProductDto> ProductList)
         {
             if (!ModelState.IsValid)
@@ -273,14 +336,18 @@ namespace DocRepoApi.Controllers
         #endregion
 
         #region Product Version
-        // POST: api/v1/products/5/versions/
+        // POST: api/v1/Products/5/Versions
         /// <summary>
         /// Creates a new version of a product.
         /// </summary>
         /// <param name="productId">ID of the product.</param>
         /// <param name="productVersion">Product version object.</param>
-        /// <returns></returns>
-        [HttpPost("{productId}/versions")]
+        /// <returns>Product version object or description of error.</returns>
+        /// <response code="201">Returns the newly created product version.</response>
+        /// <response code="400">Invalid request.</response>
+        [HttpPost("{productId}/Versions")]
+        [ProducesResponseType(typeof(ProductVersionDto), 201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> PostProductVersion([FromRoute] int productId, [FromBody] ProductVersionDto productVersion)
         {
             if (!ModelState.IsValid)
@@ -288,30 +355,36 @@ namespace DocRepoApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            if(!ProductExists(productId))
+            if (!ProductExists(productId))
             {
-                return BadRequest("Invalid product.");
+                ModelState.AddModelError("Invalid Product", "The product does not exist.");
+                return BadRequest(ModelState);
             }
 
-            Product product = _context.Products.SingleOrDefault(p => p.Id == productId);
+            // Product product = _context.Products.SingleOrDefault(p => p.Id == productId);
 
             var productVersionReversed = _mapper.Map<ProductVersion>(productVersion);
-            productVersionReversed.Product = product;     
+
+            productVersionReversed.ProductId = productId;     
 
             _context.ProductVersions.Add(productVersionReversed);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProductVersion", new { productId = product.Id, versionId = productVersionReversed.Id }, _mapper.Map<ProductVersionDto>(productVersionReversed));
+            return CreatedAtAction("GetProductVersion", new { productId = productId, versionId = productVersionReversed.Id }, _mapper.Map<ProductVersionDto>(productVersionReversed));
         }
 
-        // POST: api/v1/products/5/versions/batch
+        // POST: api/v1/Products/5/Versions/Batch
         /// <summary>
         /// Creates multiple product versions.
         /// </summary>
         /// <param name="productId">ID of the product.</param>
         /// <param name="productVersionList">List of product version objects.</param>
-        /// <returns></returns>
-        [HttpPost("{productId}/versions/batch")]
+        /// <returns>List of product version objects or description of error.</returns>
+        /// <response code="201">Action is successful.</response>
+        /// <response code="400">Invalid request.</response>
+        [HttpPost("{productId}/Versions/Batch")]
+        [ProducesResponseType(typeof(IEnumerable<ProductVersionDto>), 201)]
+        [ProducesResponseType(400)]
         public async Task<IActionResult> PostMultipleProductVersions([FromRoute] int productId, [FromBody] IEnumerable<ProductVersionDto> productVersionList)
         {
             if (!ModelState.IsValid)
@@ -321,7 +394,8 @@ namespace DocRepoApi.Controllers
 
             if (!ProductExists(productId))
             {
-                return BadRequest("Invalid product.");
+                ModelState.AddModelError("Invalid Product", "The product does not exist.");
+                return BadRequest(ModelState);
             }
 
             Product product = _context.Products.SingleOrDefault(p => p.Id == productId);
@@ -350,8 +424,14 @@ namespace DocRepoApi.Controllers
         /// Deletes a product.
         /// </summary>
         /// <param name="id">ID of the product.</param>
-        /// <returns></returns>
+        /// <returns>Deleted document type object or description of error.</returns>
+        /// <response code="200">Product sucessufully deleted.</response>
+        /// <response code="400">Invalid request.</response>
+        /// <response code="404">Product with the provided ID could not be found.</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(typeof(ProductDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteProduct([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -360,12 +440,14 @@ namespace DocRepoApi.Controllers
             }
 
             var product = await _context.Products.SingleOrDefaultAsync(m => m.Id == id);
+
             if (product == null)
             {
                 return NotFound();
             }
 
             _context.Products.Remove(product);
+
             await _context.SaveChangesAsync();
 
             return Ok(_mapper.Map<ProductDto>(product));
@@ -379,8 +461,14 @@ namespace DocRepoApi.Controllers
         /// </summary>
         /// <param name="productId">ID of the product.</param>
         /// <param name="versionId">ID of the version.</param>
-        /// <returns></returns>
-        [HttpDelete("{productId}/versions/{versionId}")]
+        /// <returns>Deleted document type object or description of error.</returns>
+        /// <response code="200">Product version sucessufully deleted.</response>
+        /// <response code="400">Invalid request.</response>
+        /// <response code="404">Product version with the provided ID could not be found.</response>
+        [HttpDelete("{productId}/Versions/{versionId}")]
+        [ProducesResponseType(typeof(ProductVersionDto), 200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteProductVersion([FromRoute] int productId, [FromRoute] int versionId)
         {
             if (!ModelState.IsValid)
@@ -390,7 +478,8 @@ namespace DocRepoApi.Controllers
 
             if (!ProductExists(productId))
             {
-                return BadRequest("Invalid product.");
+                ModelState.AddModelError("Invalid Product", "The product does not exist.");
+                return BadRequest(ModelState);
             }
 
             var productVersion = await _context.ProductVersions.Include(p => p.Product).SingleOrDefaultAsync(m => m.Id == versionId);
