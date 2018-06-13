@@ -12,8 +12,8 @@ namespace DocRepoApiTests.ModelTests
         private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
 
         #region Test Compare and Sort
-        [Fact(DisplayName = "ClientCatalogDto.Equals(other) should match based on id and all properties")]
-        public void ClientCatalogDtoEqualsRetursCorrectValues()
+        [Fact(DisplayName = "ClientCatalogDto.Equals(other, true) should match based on ID and all properties")]
+        public void ClientCatalogDtoEqualsReturnsCorrectValues()
         {
             ClientCatalogDto c1 = new ClientCatalogDto
             {
@@ -48,8 +48,8 @@ namespace DocRepoApiTests.ModelTests
             Assert.False(c1.Equals(c4, true));
         }
 
-        [Fact(DisplayName = "List<ClientCatalogDto>.Sort() should sort authors based on Category then FullName")]
-        public void ClientCatalogDtoSortReturnsListSortedByFullName()
+        [Fact(DisplayName = "List<ClientCatalogDto>.Sort() should sort Client Catalogs based on Name")]
+        public void ClientCatalogDtoSortReturnsListSortedByName()
         {
             List<ClientCatalogDto> ClientCatalogs = new List<ClientCatalogDto>
             {

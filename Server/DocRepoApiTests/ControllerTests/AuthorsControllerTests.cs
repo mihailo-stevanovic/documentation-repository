@@ -58,6 +58,20 @@ namespace DocRepoApiTests.ControllerTests
             };
 
         }
+        /// <summary>
+        /// Returns AuthorDto with the specified ID from the test database.
+        /// </summary>
+        /// <param name="id">ID of the author.</param>
+        /// <returns>Auhtor Dto.</returns>
+        private AuthorDto GetTestAuthorFromDb(int id)
+        {
+            var dbTestContext = DbTestContext.GenerateContextWithData();
+            var author = dbTestContext.Authors                
+                .Single(a => a.Id == id);
+
+            return _mapper.Map<AuthorDto>(author);
+        }
+       
 
         private AuthorDto[] GetAuthorDtoArray()
         {
@@ -75,8 +89,7 @@ namespace DocRepoApiTests.ControllerTests
 
         #region Test GET Methods
 
-        // GET Methods
-
+        #region GET: api/v1/Authors
         [Fact(DisplayName = "GetAuthors() should return a list of all Authors")]
         public void GetAuthorsReturnsListOfAuthors()
         {
@@ -87,17 +100,36 @@ namespace DocRepoApiTests.ControllerTests
                 AuthorDto a3 = GetTestAuthorDto(3);
 
                 Assert.NotNull(result);
-                Assert.IsAssignableFrom<IEnumerable<AuthorDto>>(result);
-                Assert.Equal(10, result.Count());
-                AuthorDto a = (AuthorDto)result.Where(r => r.Id == 3).FirstOrDefault();
+                
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);
+                var resultValue = okObjectResult.Value;
+                Assert.IsAssignableFrom<IEnumerable<AuthorDto>>(resultValue);
+                Assert.NotEmpty((IEnumerable<AuthorDto>)resultValue);
+
+                IEnumerable<AuthorDto> resultValueList = (IEnumerable<AuthorDto>)resultValue;
+
+                Assert.Equal(10, resultValueList.Count());
+                AuthorDto a = (AuthorDto)resultValueList.Where(r => r.Id == 3).FirstOrDefault();
                 Assert.True(a.Equals(a3));
-                Assert.True(a.Equals(a3, true));
+                Assert.True(a.Equals(a3, true));                
 
             }
         }
 
+        [Fact(DisplayName = "GetAuthors() should return NotFound if context is empty")]
+        public void GetAuthorsEmptyContextNotFound()
+        {
+            using (var context = DbTestContext.GenerateEmptyContext())
+            using (var controller = new AuthorsController(context, _mapper))
+            {
+                var result = controller.GetAuthors();
 
+                Assert.IsType<NotFoundResult>(result);
 
+            }
+        }
+        #endregion
+        #region GET: api/v1/Authors/Active
         [Fact(DisplayName = "GetActiveAuthors() should return a list of Authors with IsFormerAuthor=false")]
         public void GetActiveAuthorsReturnsListOfNotFormerAuthors()
         {
@@ -108,16 +140,36 @@ namespace DocRepoApiTests.ControllerTests
                 AuthorDto a3 = GetTestAuthorDto(3);
 
                 Assert.NotNull(result);
-                Assert.IsAssignableFrom<IEnumerable<AuthorDto>>(result);
-                Assert.Equal(5, result.Count());
-                AuthorDto a = (AuthorDto)result.Where(r => r.Id == 3).FirstOrDefault();
+
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);
+                var resultValue = okObjectResult.Value;
+                Assert.IsAssignableFrom<IEnumerable<AuthorDto>>(resultValue);
+                Assert.NotEmpty((IEnumerable<AuthorDto>)resultValue);
+
+                IEnumerable<AuthorDto> resultValueList = (IEnumerable<AuthorDto>)resultValue;
+
+                Assert.Equal(5, resultValueList.Count());
+                AuthorDto a = (AuthorDto)resultValueList.Where(r => r.Id == 3).FirstOrDefault();
                 Assert.True(a.Equals(a3));
                 Assert.True(a.Equals(a3, true));
             }
         }
 
+        [Fact(DisplayName = "GetActiveAuthors() should return NotFound if context is empty")]
+        public void GetActiveAuthorsEmptyContextNotFound()
+        {
+            using (var context = DbTestContext.GenerateEmptyContext())
+            using (var controller = new AuthorsController(context, _mapper))
+            {
+                var result = controller.GetActiveAuthors();
 
-        [Fact(DisplayName = "GetAuthor(id) should return the Author with the the ID")]
+                Assert.IsType<NotFoundResult>(result);
+
+            }
+        }
+        #endregion
+        #region GET: api/v1/Authors/5
+        [Fact(DisplayName = "GetAuthor(id) should return the correct Author")]
         public async void GetAuthorByIdReturnsSingleAuthor()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -137,7 +189,6 @@ namespace DocRepoApiTests.ControllerTests
             }
         }
 
-
         [Fact(DisplayName = "GetAuthor(wrongId) should return NotFound")]
         public async void GetAuthorWithIncorrectIdReturnsNotFound()
         {
@@ -150,7 +201,6 @@ namespace DocRepoApiTests.ControllerTests
 
             }
         }
-
 
         [Fact(DisplayName = "GetAuthor(id) with ModelStateError should return BadRequest")]
         public async void GetAuthorModelStateErrorReturnsBadRequest()
@@ -166,34 +216,9 @@ namespace DocRepoApiTests.ControllerTests
 
             }
         }
-
         #endregion
-
-        /*
-         * Cannot unit test with InMemoryDB, should be included in integration tests
-         * 
-         // PUT Methods        
-         [Fact(DisplayName = "PutAuthor(id, Author) should update the context")]
-         public async void PutAuthorCorrectDataUpdatesContext()
-         {           
-
-             using (var context = DbTestContext.GenerateContextWithData())
-             using (var controller = new AuthorsController(context, _mapper))
-             {
-                 int id = 3;
-                 Author a3 = context.Authors.Find(id);
-                 AuthorDto a3Dto = _mapper.Map<AuthorDto>(a3);
-
-                 a3Dto.LastName = "Modified";                
-
-                 var result = await controller.PutAuthor(id, a3Dto);
-
-                 Assert.IsType<NoContentResult>(result);         
-
-
-             }
-         }
-         */
+        
+        #endregion       
 
         #region Test POST Methods
         // POST Methods
@@ -230,7 +255,7 @@ namespace DocRepoApiTests.ControllerTests
             }
         }        
 
-        [Fact(DisplayName = "PostMultipleAuthors(AuthorList) should create a muultiple new Authors")]
+        [Fact(DisplayName = "PostMultipleAuthors(AuthorList) should create multiple new Authors")]
         public async void PostMultipleAuthorsCorrectDataCreatesAuthors()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -268,7 +293,7 @@ namespace DocRepoApiTests.ControllerTests
         #region Test DELETE Methods
 
         // DELETE Methods
-        [Fact(DisplayName = "DeleteAuthor(id) should remove the author from context")]
+        [Fact(DisplayName = "DeleteAuthor(id) should remove the Author from context")]
         public async void DeleteAuthorIdDeletesAuthor()
         {
             using (var context = DbTestContext.GenerateContextWithData())

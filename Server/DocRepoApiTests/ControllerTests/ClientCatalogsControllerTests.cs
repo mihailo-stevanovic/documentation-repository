@@ -37,17 +37,34 @@ namespace DocRepoApiTests.ControllerTests
                 var result = controller.GetClientCatalogs();
                 ClientCatalogDto p3 = GetTestClientCatalogDto(3);
 
-                Assert.NotNull(result);
-                Assert.IsAssignableFrom<IEnumerable<ClientCatalogDto>>(result);
-                Assert.Equal(10, result.Count());
-                ClientCatalogDto p = (ClientCatalogDto)result.Where(r => r.Id == 3).FirstOrDefault();
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);
+                var resultValue = okObjectResult.Value;
+                Assert.IsAssignableFrom<IEnumerable<ClientCatalogDto>>(resultValue);
+                Assert.NotEmpty((IEnumerable<ClientCatalogDto>)resultValue);
+
+                IEnumerable<ClientCatalogDto> resultValueList = (IEnumerable<ClientCatalogDto>)resultValue;
+
+                Assert.Equal(10, resultValueList.Count());
+                ClientCatalogDto p = (ClientCatalogDto)resultValueList.Where(r => r.Id == 3).FirstOrDefault();
                 Assert.True(p.Equals(p3));
-                Assert.True(p.Equals(p3, true));
+                Assert.True(p.Equals(p3, true));                           
+            }
+        }
+
+        [Fact(DisplayName = "GetClientCatalogs() should return NotFound if context is empty")]
+        public void GetClientCatalogsEmptyContextNotFound()
+        {
+            using (var context = DbTestContext.GenerateEmptyContext())
+            using (var controller = new ClientCatalogsController(context, _mapper))
+            {
+                var result = controller.GetClientCatalogs();
+
+                Assert.IsType<NotFoundResult>(result);
 
             }
         }
 
-        [Fact(DisplayName = "GetClientCatalog(id) should return the ClientCatalog with the the ID")]
+        [Fact(DisplayName = "GetClientCatalog(id) should return the ClientCatalog")]
         public async void GetClientCatalogByIdReturnsSingleClientCatalog()
         {
             using (var context = DbTestContext.GenerateContextWithData())

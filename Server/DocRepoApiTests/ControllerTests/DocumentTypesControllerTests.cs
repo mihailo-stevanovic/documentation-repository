@@ -55,16 +55,35 @@ namespace DocRepoApiTests.ControllerTests
                 DocumentTypeDto p3 = GetTestDocumentTypeDto(3);
 
                 Assert.NotNull(result);
-                Assert.IsAssignableFrom<IEnumerable<DocumentTypeDto>>(result);
-                Assert.Equal(8, result.Count());
-                DocumentTypeDto p = (DocumentTypeDto)result.Where(r => r.Id == 3).FirstOrDefault();
+
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);
+                var resultValue = okObjectResult.Value;
+                Assert.IsAssignableFrom<IEnumerable<DocumentTypeDto>>(resultValue);
+                Assert.NotEmpty((IEnumerable<DocumentTypeDto>)resultValue);
+
+                IEnumerable<DocumentTypeDto> resultValueList = (IEnumerable<DocumentTypeDto>)resultValue;
+
+                Assert.Equal(10, resultValueList.Count());
+                DocumentTypeDto p = (DocumentTypeDto)resultValueList.Where(r => r.Id == 3).FirstOrDefault();
                 Assert.True(p.Equals(p3));
-                Assert.True(p.Equals(p3, true));
+                Assert.True(p.Equals(p3, true));                               
+            }
+        }
+
+        [Fact(DisplayName = "GetDocumentTypes() should return NotFound if context is empty")]
+        public void GetDocumentTypesEmptyContextNotFound()
+        {
+            using (var context = DbTestContext.GenerateEmptyContext())
+            using (var controller = new DocumentTypesController(context, _mapper))
+            {
+                var result = controller.GetDocumentTypes();
+
+                Assert.IsType<NotFoundResult>(result);
 
             }
         }
 
-        [Fact(DisplayName = "GetDocumentType(id) should return the DocumentType with the the ID")]
+        [Fact(DisplayName = "GetDocumentType(id) should return the DocumentType")]
         public async void GetDocumentTypeByIdReturnsSingleDocumentType()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -123,9 +142,9 @@ namespace DocRepoApiTests.ControllerTests
             using (var context = DbTestContext.GenerateContextWithData())
             using (var controller = new DocumentTypesController(context, _mapper))
             {
-                DocumentTypeDto p9 = GetTestDocumentTypeDto(9);
+                DocumentTypeDto p11 = GetTestDocumentTypeDto(11);
 
-                var result = await controller.PostDocumentType(p9);
+                var result = await controller.PostDocumentType(p11);
 
                 Assert.NotNull(result);
                 var resultValue = Assert.IsType<CreatedAtActionResult>(result);

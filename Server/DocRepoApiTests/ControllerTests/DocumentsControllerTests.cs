@@ -105,7 +105,7 @@ namespace DocRepoApiTests.ControllerTests
             }
         }
 
-        [Fact(DisplayName = "GetDocument(id) should return the Document with the ID")]
+        [Fact(DisplayName = "GetDocument(id) should return the Document")]
         public async void GetDocumentByIdReturnsSingleDocument()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -190,7 +190,7 @@ namespace DocRepoApiTests.ControllerTests
             }
         }        
 
-        [Fact(DisplayName = "PostMultipleDocuments(DocumentList) should create muultiple new Documents")]
+        [Fact(DisplayName = "PostMultipleDocuments(DocumentList) should create multiple new Documents")]
         public async void PostMultipleDocumentsCorrectDataCreatesDocuments()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -202,8 +202,6 @@ namespace DocRepoApiTests.ControllerTests
 
                 Assert.NotNull(result);
                 Assert.IsType<CreatedAtActionResult>(result);
-
-
             }
         }
 
@@ -279,7 +277,7 @@ namespace DocRepoApiTests.ControllerTests
         #region Document Updates Tests
         #region GET
 
-        [Fact(DisplayName = "GetDocumentUpdates(4) should return all document updates")]
+        [Fact(DisplayName = "GetDocumentUpdates(4) should return all Document Updates related to the Document")]
         public async void GetDocumentUpdatesReturnsListOfUpdates()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -457,7 +455,7 @@ namespace DocRepoApiTests.ControllerTests
             }
         }
 
-        [Fact(DisplayName = "DeleteDocumentUpdate(4,1) should return NotFound")]
+        [Fact(DisplayName = "DeleteDocumentUpdate(999,1) should return NotFound")]
         public async void DeleteDocumentUpdateWithInvalidDocIdReturnsNotFound()
         {
             using (var context = DbTestContext.GenerateContextWithData())

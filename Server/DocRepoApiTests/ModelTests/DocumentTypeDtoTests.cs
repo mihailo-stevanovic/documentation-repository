@@ -12,7 +12,7 @@ namespace DocRepoApiTests.ModelTests
         private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
 
         #region Test Compare and Sort
-        [Fact(DisplayName = "DocumentTypeDto.Equals(other) should match based on id and all properties")]
+        [Fact(DisplayName = "DocumentTypeDto.Equals(other, true) should match based on ID and all properties")]
         public void DocumentTypeDtoEqualsRetursCorrectValues()
         {
             DocumentTypeDto d1 = new DocumentTypeDto
@@ -52,8 +52,8 @@ namespace DocRepoApiTests.ModelTests
             Assert.False(d1.Equals(d4, true));
         }
         
-        [Fact(DisplayName = "List<DocumentTypeDto>.Sort() should sort authors based on Category then FullName")]
-        public void DocumentTypeDtoSortReturnsListSortedByFullName()
+        [Fact(DisplayName = "List<DocumentTypeDto>.Sort() should Document Types by Category then FullName")]
+        public void DocumentTypeDtoSortReturnsListSortedByCategoryFullName()
         {
             List<DocumentTypeDto> DocumentTypes = new List<DocumentTypeDto>
             {

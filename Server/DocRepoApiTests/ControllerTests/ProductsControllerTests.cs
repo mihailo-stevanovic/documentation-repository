@@ -80,7 +80,7 @@ namespace DocRepoApiTests.ControllerTests
         #region Test GET Methods
 
         // GET Methods
-        [Fact(DisplayName = "GetProducts() should return a list of all products")]
+        [Fact(DisplayName = "GetProducts() should return a list of all Products")]
         public void GetProductsReturnsListOfAuthors()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -90,16 +90,36 @@ namespace DocRepoApiTests.ControllerTests
                 ProductDto p3 = GetTestProductDto(3);
 
                 Assert.NotNull(result);
-                Assert.IsAssignableFrom<IEnumerable<ProductDto>>(result);
-                Assert.Equal(10, result.Count());
-                ProductDto p = (ProductDto)result.Where(r => r.Id == 3).FirstOrDefault();
+
+                var okObjectResult = Assert.IsType<OkObjectResult>(result);
+                var resultValue = okObjectResult.Value;
+                Assert.IsAssignableFrom<IEnumerable<ProductDto>>(resultValue);
+                Assert.NotEmpty((IEnumerable<ProductDto>)resultValue);
+
+                IEnumerable<ProductDto> resultValueList = (IEnumerable<ProductDto>)resultValue;
+
+                Assert.Equal(10, resultValueList.Count());
+                ProductDto p = (ProductDto)resultValueList.Where(r => r.Id == 3).FirstOrDefault();
                 Assert.True(p.Equals(p3));
                 Assert.True(p.Equals(p3, true));
 
             }
         }
-        
-        [Fact(DisplayName = "GetProduct(id) should return the Product with the the ID")]
+
+        [Fact(DisplayName = "GetProducts() should return NotFound if context is empty")]
+        public void GetProductsEmptyContextNotFound()
+        {
+            using (var context = DbTestContext.GenerateEmptyContext())
+            using (var controller = new ProductsController(context, _mapper))
+            {
+                var result = controller.GetProducts();
+
+                Assert.IsType<NotFoundResult>(result);
+
+            }
+        }
+
+        [Fact(DisplayName = "GetProduct(id) should return the Product")]
         public async void GetProductByIdReturnsSingleProduct()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -273,7 +293,7 @@ namespace DocRepoApiTests.ControllerTests
         #region Test GET Methods
         
         // Get Methods
-        [Fact(DisplayName = "GetProductVersions() should return a list of all ProductVersions")]
+        [Fact(DisplayName = "GetProductVersions(productId) should return a list of all ProductVersions related to the Product")]
         public async void GetProductVersionsReturnsListOfAuthors()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -285,8 +305,8 @@ namespace DocRepoApiTests.ControllerTests
                 Assert.NotNull(result);
 
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);                
-                Assert.IsAssignableFrom<List<ProductVersionDto>>(okObjectResult.Value);
-                List<ProductVersionDto> resultValue = (List<ProductVersionDto>)okObjectResult.Value;
+                Assert.IsAssignableFrom<IEnumerable<ProductVersionDto>>(okObjectResult.Value);
+                IEnumerable<ProductVersionDto> resultValue = (IEnumerable<ProductVersionDto>)okObjectResult.Value;
                 Assert.Equal(10, resultValue.Count());
                 ProductVersionDto p = (ProductVersionDto)resultValue.Where(r => r.Id == 3).FirstOrDefault();
                 Assert.True(p.Equals(p3));
@@ -295,7 +315,7 @@ namespace DocRepoApiTests.ControllerTests
             }
         }
         
-        [Fact(DisplayName = "GetProductVersion(id) should return the ProductVersion with the the ID")]
+        [Fact(DisplayName = "GetProductVersion(productId,versionId) should return the ProductVersion")]
         public async void GetProductVersionByIdReturnsSingleProductVersion()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -316,7 +336,7 @@ namespace DocRepoApiTests.ControllerTests
         }
 
 
-        [Fact(DisplayName = "GetProductVersion(wrongId) should return NotFound")]
+        [Fact(DisplayName = "GetProductVersion(productId, wrongId) should return NotFound")]
         public async void GetProductVersionWithIncorrectIdReturnsNotFound()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -330,7 +350,7 @@ namespace DocRepoApiTests.ControllerTests
         }
 
 
-        [Fact(DisplayName = "GetProductVersion(id) with ModelStateError should return BadRequest")]
+        [Fact(DisplayName = "GetProductVersion(productId) with ModelStateError should return BadRequest")]
         public async void GetProductVersionModelStateErrorReturnsBadRequest()
         {
             using (var context = DbTestContext.GenerateContextWithData())
@@ -383,7 +403,7 @@ namespace DocRepoApiTests.ControllerTests
             }
         }
         
-        [Fact(DisplayName = "PostMultipleProductVersions(ProductVersionList) should create a muultiple new ProductVersions")]
+        [Fact(DisplayName = "PostMultipleProductVersions(ProductVersionList) should create multiple new ProductVersions")]
         public async void PostMultipleProductVersionsCorrectDataCreatesProductVersions()
         {
             using (var context = DbTestContext.GenerateContextWithData())

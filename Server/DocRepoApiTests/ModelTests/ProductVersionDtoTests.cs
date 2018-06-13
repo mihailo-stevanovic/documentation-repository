@@ -12,7 +12,7 @@ namespace DocRepoApiTests.ModelTests
         private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
 
         #region Test Compare and Sort
-        [Fact(DisplayName = "ProductVersionDto.Equals(other) should math based on id and all properties")]
+        [Fact(DisplayName = "ProductVersionDto.Equals(other, true) should match based on ID and all properties")]
         public void ProductVersionDtoEqualsReturnsCorrectValues()
         {
             ProductVersionDto p1 = new ProductVersionDto

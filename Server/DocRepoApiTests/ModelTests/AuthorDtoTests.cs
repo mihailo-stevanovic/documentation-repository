@@ -13,7 +13,7 @@ namespace DocRepoApiTests.ModelTests
         private IMapper _mapper = MapperTestContext.GenerateTestMapperContext();
 
         #region Test Compare and Sort
-        [Fact(DisplayName = "AuthorDto.Equals(other) should math based on id and all properties")]
+        [Fact(DisplayName = "AuthorDto.Equals(other, true) should match based on ID and all properties")]
         public void AuthorEqualsReturnsCorrectValues()
         {
             AuthorDto a1 = new AuthorDto
@@ -68,7 +68,7 @@ namespace DocRepoApiTests.ModelTests
             Assert.False(a1.Equals(a4, true));
 
         }
-        [Fact(DisplayName = "List<AuthorDto>.Sort() should sort authors based on Alias")]
+        [Fact(DisplayName = "List<AuthorDto>.Sort() should sort Authors based on Alias")]
         public void AuthorsSortReturnsListSortedByAlias()
         {
             List<AuthorDto> authors = new List<AuthorDto>
