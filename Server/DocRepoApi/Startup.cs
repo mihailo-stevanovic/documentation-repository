@@ -29,6 +29,7 @@ namespace DocRepoApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             services.AddDbContext<DocRepoContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper(x => x.AddProfile(new MappingsProfile()));
             services.AddMvc();
@@ -40,11 +41,11 @@ namespace DocRepoApi
                 {
                     Title = "Doc Repo API",
                     Version = "v1",
-                    Description = "ASP.NET Core Web API used for publishing and consuming technical documentation.",
+                    Description = "ASP.NET Core Web API used for publishing and accessing technical documentation.",
                     Contact = new Contact
                     {
                         Name = "Mihailo Stevanović",
-                        Email = "mstevanovic@efront.com"
+                        Email = "mihailo.stev@gmail.com"
                     }
                 });                
                 var basePath = AppContext.BaseDirectory;
@@ -59,8 +60,9 @@ namespace DocRepoApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseCors(builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader());
             }
-
+            
             app.UseStaticFiles();
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

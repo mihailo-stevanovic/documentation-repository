@@ -20,10 +20,10 @@ namespace DocRepoApi.Data
 
             var authors = new Author[]
             {
-                    new Author { FirstName="Mihailo", LastName="Stevanović", Alias="MSTEV", Email="mstevanovic@efront.com", AitName = "Mihailo", IsFormerAuthor = false },
-                    new Author { FirstName="Ivana", LastName="Matić", Alias="IMATI", Email="imatic@efront.com", AitName = "Ivana", IsFormerAuthor = false },
-                    new Author { FirstName="Milica", LastName="Prorok", Alias="MPROR", Email="mprorok@efront.com", AitName = "Milica", IsFormerAuthor = false  },
-                    new Author { FirstName="Milica", LastName="Nikolić", Alias="MILNI", Email="milnikolic@efront.com", AitName = "Mili", IsFormerAuthor = true  }
+                    new Author { FirstName="Jamie", LastName="Smith", Alias="JSMIT", Email="jsmith@company.com", AitName = "Jamie", IsFormerAuthor = false },
+                    new Author { FirstName="Ariel", LastName="Taylor", Alias="ATAYL", Email="ataylor@company.com", AitName = "Ariel", IsFormerAuthor = false },
+                    new Author { FirstName="Glen", LastName="Williams", Alias="GWILL", Email="gwilliams@company.com", AitName = "Glen", IsFormerAuthor = false  },
+                    new Author { FirstName="Shelby", LastName="Clark", Alias="SCLAR", Email="sclark@company.com", AitName = "Shelby", IsFormerAuthor = true  }
             };
 
             if (context.Authors.Count() < 4)
@@ -38,16 +38,16 @@ namespace DocRepoApi.Data
 
             var clientCatalogs = new ClientCatalog[]
                 {
-                    new ClientCatalog { Name = "eFront Invest - Release Notes" },
-                    new ClientCatalog { Name = "eFront Portfolio Monitoring" },
-                    new ClientCatalog { Name = "eFront PEO/VC" },
-                    new ClientCatalog { Name = "eFront Mobile" },
-                    new ClientCatalog { Name = "eFront Outlook" },
-                    new ClientCatalog { Name = "eFront Investment Café" },
-                    new ClientCatalog { Name = "Investment Café Classic" },
-                    new ClientCatalog { Name = "eFront Insight" },
-                    new ClientCatalog { Name = "GP/LP - Tools" },
-                    new ClientCatalog { Name = "eFront Data Warehouse" }
+                    new ClientCatalog { Name = "Awesome Product - Release Notes" },
+                    new ClientCatalog { Name = "Nice Product" },
+                    new ClientCatalog { Name = "Old Product" },
+                    new ClientCatalog { Name = "Mobile App" },
+                    new ClientCatalog { Name = "CRM Solution" },
+                    new ClientCatalog { Name = "Next Gen Portal" },
+                    new ClientCatalog { Name = "Classic Portal" },
+                    new ClientCatalog { Name = "Tools" },
+                    new ClientCatalog { Name = "Framework" },
+                    new ClientCatalog { Name = "Reporting" }
                 };
 
             if (context.ClientCatalogs.Count() < 10)
@@ -90,14 +90,14 @@ namespace DocRepoApi.Data
             {
                 var products = new Product[]
                 {
-                    new Product { ShortName = "FIA" , FullName = "eFront Invest", Alias = "FrontInvest" },
-                    new Product { ShortName = "FPM" , FullName = "eFront Portfolio Monitoring", Alias = "FrontPM" },
-                    new Product { ShortName = "PEO" , FullName = "eFront PEO/VC", Alias = "FrontGP" },
-                    new Product { ShortName = "FM" , FullName = "eFront Mobile", Alias = "FrontMobile" },
-                    new Product { ShortName = "FO" , FullName = "eFront Outlook", Alias = "FrontOutlook" },
-                    new Product { ShortName = "ICX" , FullName = "eFront Investment Café", Alias = "eIC" },
-                    new Product { ShortName = "ICC" , FullName = "Investment Café Classic", Alias = "IC" },
-                    new Product { ShortName = "INS" , FullName = "eFront Insight", Alias = "Inisght" }
+                    new Product { ShortName = "P1" , FullName = "Awesome Product", Alias = "Product 1" },
+                    new Product { ShortName = "P2" , FullName = "Nice Product", Alias = "Product 2" },
+                    new Product { ShortName = "P3" , FullName = "Old Product", Alias = "Product 3" },
+                    new Product { ShortName = "P4" , FullName = "Mobile App", Alias = "Product 4" },
+                    new Product { ShortName = "P5" , FullName = "CRM Solution", Alias = "Product 5" },
+                    new Product { ShortName = "P6" , FullName = "Next Gen Portal", Alias = "Product 6" },
+                    new Product { ShortName = "P7" , FullName = "Classic Portal", Alias = "Product 7" },
+                    new Product { ShortName = "P8" , FullName = "Reporting", Alias = "Product 8" }
                 };
 
                 foreach (Product product in products)
@@ -119,11 +119,11 @@ namespace DocRepoApi.Data
 
             Document doc1 = new Document
             {
-                Title = "eFront PM Release Notes",
-                PdfLink = "eFrontPM/ReleaseNotes/eFrontPM_ReleaseNotes_V2018-1.pdf",
+                Title = "Nice Product Release Notes",
+                PdfLink = "NiceProduct/ReleaseNotes/NiceProduct_ReleaseNotes_V2018-1.pdf",
                 DocumentTypeId = 9,
                 IsFitForClients = true,
-                ProductVersionId = 14,
+                ProductVersionId = 37,
                 DocumentAuthors = new List<DocumentAuthor>
                 {
                     new DocumentAuthor {Author = authors[0]},
@@ -141,11 +141,11 @@ namespace DocRepoApi.Data
 
             Document doc2 = new Document
             {
-                Title = "eFront Mobile Release Notes",
-                PdfLink = "eFrontMobile/ReleaseNotes/eFrontMobile_ReleaseNotes_V2018-1.pdf",
+                Title = "Mobile App Release Notes",
+                PdfLink = "MobileApp/ReleaseNotes/MobileApp_ReleaseNotes_V2018-2.pdf",
                 DocumentTypeId = 9,
                 IsFitForClients = true,
-                ProductVersionId = 22,
+                ProductVersionId = 15,
                 DocumentAuthors = new List<DocumentAuthor>
                 {
                     new DocumentAuthor {Author = authors[0]},
