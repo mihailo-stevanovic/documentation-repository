@@ -1,0 +1,2133 @@
+swagger: "2.0"
+info:
+  description: "ASP.NET Core Web API used for publishing and accessing technical documentation."
+  version: "1.0.0"
+  title: "Documentation Repository API"  
+  contact:
+    email: "mihailo.stev@gmail.com"
+    name: "Mihailo Stevanović"   
+tags:
+- name: "Authors"
+  description: "View, edit, add or delete document authors."    
+- name: "Client Catalogs"
+  description: "View, edit, add or delete client catalogs."
+- name: "Documents"
+  description: "View, edit, add or delete documents and document updates."
+- name: "Documents Internal"  
+  description: "View published documents for internal users."
+- name: "Document Types"  
+  description: "View, edit, add or delete document types."
+- name: "Products"
+  description: "View, edit, add or delete products and product versions."
+schemes:
+- "http"
+paths:
+  /api/v1/Authors:
+    get:
+      tags:
+        - Authors
+      summary: Returns all authors.
+      operationId: ApiV1AuthorsGet
+      consumes: []
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Authors successfully retrieved.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Author'
+            example:
+              - id: 1
+                firstName: Jamie
+                lastName: Smith
+                email: jsmith@doc.com
+                alias: JSMIT
+                isFormerAuthor: false
+                aitName: Jamie
+              - id: 2
+                firstName: Ariel
+                lastName: Taylor
+                email: ataylor@doc.com
+                alias: ATAYL
+                isFormerAuthor: true
+                aitName: Ariel
+              - id: 3
+                firstName: Glen
+                lastName: Williams
+                email: gwilliams@doc.com
+                alias: GWILL
+                isFormerAuthor: false
+                aitName: Glen
+        '404':
+          description: No authors were found.
+    post:
+      tags:
+        - Authors
+      summary: Creates a new author.
+      operationId: ApiV1AuthorsPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: author
+          in: body
+          description: New author object.
+          required: true          
+          schema:
+            $ref: '#/definitions/Author'           
+      responses:
+        '201':
+          description: Returns the newly created author.
+          schema:
+            $ref: '#/definitions/Author'
+        '400':
+          description: Invalid request.
+  /api/v1/Authors/Active:
+    get:
+      tags:
+        - Authors
+      summary: Returns all active authors. Former authors are excluded.
+      operationId: ApiV1AuthorsActiveGet
+      consumes: []
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Authors successfully retrieved.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Author'
+            example:
+              - id: 1
+                firstName: Jamie
+                lastName: Smith
+                email: jsmith@doc.com
+                alias: JSMIT
+                isFormerAuthor: false
+                aitName: Jamie              
+              - id: 3
+                firstName: Glen
+                lastName: Williams
+                email: gwilliams@doc.com
+                alias: GWILL
+                isFormerAuthor: false
+                aitName: Glen
+        '404':
+          description: No active authors were found.
+  '/api/v1/Authors/{id}':
+    get:
+      tags:
+        - Authors
+      summary: Returns a single author.
+      operationId: ApiV1AuthorsByIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the author.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Author successfully returned.
+          schema:
+            $ref: '#/definitions/Author'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Author with a matching ID could not be found.
+    put:
+      tags:
+        - Authors
+      summary: Updates an author.
+      operationId: ApiV1AuthorsByIdPut
+      consumes:
+        - application/json
+      produces: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the author.
+          required: true
+          type: integer
+          format: int32
+        - name: author
+          in: body
+          description: Updated author.
+          required: true
+          schema:
+            $ref: '#/definitions/Author'
+      responses:
+        '204':
+          description: Update is successuful.
+        '400':
+          description: Request is incorrect or ID from the path does not match the ID of the author.
+        '404':
+          description: Author does not exist.
+    delete:
+      tags:
+        - Authors
+      summary: Deletes an author.
+      operationId: ApiV1AuthorsByIdDelete
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the author to be deleted.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Author sucessufully deleted.
+          schema:
+            $ref: '#/definitions/Author'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Author with the provided ID could not be found.
+  /api/v1/Authors/Batch:
+    post:
+      tags:
+        - Authors
+      summary: Creates multiple authors.
+      operationId: ApiV1AuthorsBatchPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: authorList
+          in: body
+          description: List of authors.
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Author'
+      responses:
+        '201':
+          description: Action is successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Author'
+        '400':
+          description: Invalid request.
+  /api/v1/ClientCatalogs:
+    get:
+      tags:
+        - "Client Catalogs"
+      summary: Returns all client catalogs.
+      operationId: ApiV1ClientCatalogsGet
+      consumes: []
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Catalogs successfully retrieved.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ClientCatalog'
+            example:
+              - id: 1
+                name: Awesome Product Knowledge Base
+                internalId: "000753"
+              - id: 2
+                name: Nice Product Release Notes
+                internalId: "000845"
+        '404':
+          description: No catalogs were found.
+    post:
+      tags:
+        - "Client Catalogs"
+      summary: Creates a new client catalog.
+      operationId: ApiV1ClientCatalogsPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: clientCatalog
+          in: body
+          description: Client catalog object.
+          required: true
+          schema:
+            $ref: '#/definitions/ClientCatalog'
+      responses:
+        '201':
+          description: Returns the newly created author.
+          schema:
+            $ref: '#/definitions/ClientCatalog'
+        '400':
+          description: Invalid request.
+  '/api/v1/ClientCatalogs/{id}':
+    get:
+      tags:
+        - "Client Catalogs"
+      summary: Returns a single client catalog.
+      operationId: ApiV1ClientCatalogsByIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the client catalog.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Catalog successfully returned.
+          schema:
+            $ref: '#/definitions/ClientCatalog'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Catalog with a matching ID could not be found.
+    put:
+      tags:
+        - "Client Catalogs"
+      summary: Updates an existing client catalog.
+      operationId: ApiV1ClientCatalogsByIdPut
+      consumes:
+        - application/json
+      produces: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the client catalog.
+          required: true
+          type: integer
+          format: int32
+        - name: clientCatalog
+          in: body
+          description: Client catalog object.
+          required: true
+          schema:
+            $ref: '#/definitions/ClientCatalog'
+      responses:
+        '204':
+          description: Update is successuful.
+        '400':
+          description: Request is incorrect or ID from the path does not match the ID of the author.
+        '404':
+          description: Author does not exist.
+    delete:
+      tags:
+        - "Client Catalogs"
+      summary: Deletes a client catalog.
+      operationId: ApiV1ClientCatalogsByIdDelete
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the client catalog.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Client catalog sucessufully deleted.
+          schema:
+            $ref: '#/definitions/ClientCatalog'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Client catalog with the provided ID could not be found.
+  /api/v1/ClientCatalogs/Batch:
+    post:
+      tags:
+        - "Client Catalogs"
+      summary: Creates multiple client catalogs.
+      operationId: ApiV1ClientCatalogsBatchPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: clientCatalogList
+          in: body
+          description: List of client catalog objects.
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ClientCatalog'
+      responses:
+        '201':
+          description: Action is successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ClientCatalog'        
+        '400':
+          description: Invalid request.
+  /api/v1/Documents:
+    get:
+      tags:
+        - Documents
+      summary: Returns all documents.
+      operationId: ApiV1DocumentsGet
+      consumes: []
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Documents successfully returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Document'
+            example:            
+            - id: 1
+              title: Awesome Product User Guide V2018.1
+              htmlLink: AwesomeProduct/UserGuide/V2018-1/index.html
+              pdfLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.pdf
+              wordLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.docx
+              otherLink: null
+              isFitForClients: true
+              shortDescription: The document provides a description of the main features of <strong>Awesome Product</strong> as well as the main how-to procedures.
+              aitId: 78965
+              documentAuthorIds:
+               - 1
+               - 2
+               - 3
+              documentCatalogIds:
+               - 1
+              latestTopicsUpdated: This is the first version of the document.
+              parentDocumentId: 0
+              productVersionId: 1
+              documentTypeId: 2
+              rowVersion: AAAAAAAAB9E=
+            - id: 2
+              title: Nice Product Release Notes V2018.1
+              htmlLink: null
+              pdfLink: NiceProduct/ReleaseNotes/AwesomeProduct_ReleaseNotes_V2018-1.pdf
+              wordLink: null
+              otherLink: null
+              isFitForClients: true
+              shortDescription: This document contains the new features and bug fixes implemented in V2018.1.
+              aitId: 78965
+              documentAuthorIds:
+               - 1               
+               - 3
+              documentCatalogIds:
+               - 2
+              latestTopicsUpdated: V2018.1 Bug Fixes.
+              parentDocumentId: 0
+              productVersionId: 1
+              documentTypeId: 3
+              rowVersion: AAAAAAAAC8H=
+        '404':
+          description: No documents found.
+    post:
+      tags:
+        - Documents
+      summary: Creates a document.
+      operationId: ApiV1DocumentsPost
+      consumes:        
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: document
+          in: body
+          description: New document object.
+          required: true
+          schema:
+            $ref: '#/definitions/Document'
+      responses:
+        '201':
+          description: Document properly created.
+          schema:
+            $ref: '#/definitions/Document'
+        '400':
+          description: Invalid request.
+  '/api/v1/Documents/{id}':
+    get:
+      tags:
+        - Documents
+      summary: Returns a single document.
+      operationId: ApiV1DocumentsByIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document successfully returned.
+          schema:
+            $ref: '#/definitions/Document'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Document with a matching ID could not be found.
+    put:
+      tags:
+        - Documents
+      summary: Updates a document.
+      operationId: ApiV1DocumentsByIdPut
+      consumes:
+        - application/json
+      produces: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+        - name: document
+          in: body
+          description: Modified document object.
+          required: true
+          schema:
+            $ref: '#/definitions/Document'
+      responses:
+        '204':
+          description: Document successufully updated.
+        '400':
+          description: Invalid request.
+        '404':
+          description: Document with a matching ID could not be found.
+    delete:
+      tags:
+        - Documents
+      summary: Deletes a document.
+      operationId: ApiV1DocumentsByIdDelete
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document sucessfully deleted.
+          schema:
+            $ref: '#/definitions/Document'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Document with the provided ID could not be found.
+  '/api/v1/Documents/{documentId}/Updates':
+    get:
+      tags:
+        - Documents
+      summary: Returns all updates related to a document.
+      operationId: ApiV1DocumentsByDocumentIdUpdatesGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: documentId
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document updates successfully returned returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentUpdate'
+            example:
+              - id: 1
+                timestamp: "2018-06-04T00:00:00"
+                latestTopicsUpdated: "This is the first version of the document."
+                isPublished: true
+                documentId: 1
+                rowVersion: AAAAAAAARlE=
+              - id: 2
+                timestamp: "2018-06-04T00:00:00"
+                latestTopicsUpdated: "Cover Page"
+                isPublished: false
+                documentId: 1
+                rowVersion: AAAAAAAARlE=
+              - id: 3
+                timestamp: "2018-06-11T00:00:00"
+                latestTopicsUpdated: "<ol><li>Create a contact</li><li>Edit a contact</li></ol>"
+                isPublished: true
+                documentId: 1
+                rowVersion: AAAAAAAARlE=
+        '400':
+          description: Invalid request.
+        '404':
+          description: Updates for a document with the specified ID could not be found.
+    post:
+      tags:
+        - Documents
+      summary: Creates a document update.
+      operationId: ApiV1DocumentsByDocumentIdUpdatesPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: documentId
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+        - name: documentUpdate
+          in: body
+          description: New document update object.
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentUpdate'
+      responses:
+        '201':
+          description: Document update properly created.
+          schema:
+            $ref: '#/definitions/DocumentUpdate'
+        '400':
+          description: Invalid request.
+  '/api/v1/Documents/{documentId}/Updates/{updateId}':
+    get:
+      tags:
+        - Documents
+      summary: Returns a single update related to a document.
+      operationId: ApiV1DocumentsByDocumentIdUpdatesByUpdateIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: documentId
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+        - name: updateId
+          in: path
+          description: ID of the update.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document update successfully returned returned.
+          schema:
+            $ref: '#/definitions/DocumentUpdate'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Update with a matching ID and DocumentID could not be found.
+    put:
+      tags:
+        - Documents
+      summary: Updates a document update.
+      description: Please note that usage of this action is not recommended. It is provided to support specific cases.
+      operationId: ApiV1DocumentsByDocumentIdUpdatesByUpdateIdPut
+      consumes:
+        - application/json
+      produces: []
+      parameters:
+        - name: documentId
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+        - name: updateId
+          in: path
+          description: ID of the document update.
+          required: true
+          type: integer
+          format: int32
+        - name: documentUpdate
+          in: body
+          description: Modified document object.
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentUpdate'
+      responses:
+        '204':
+          description: Document update successufully modified.
+        '400':
+          description: Invalid request.
+        '404':
+          description: Document update with a matching ID could not be found.
+    delete:
+      tags:
+        - Documents
+      summary: Deletes a document update.
+      operationId: ApiV1DocumentsByDocumentIdUpdatesByUpdateIdDelete
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: documentId
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+        - name: updateId
+          in: path
+          description: ID of the document update.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document update sucessfully deleted.
+          schema:
+            $ref: '#/definitions/DocumentUpdate'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Document update with the provided ID and DocumentID could not be found.
+  /api/v1/Documents/Batch:
+    post:
+      tags:
+        - Documents
+      summary: Creates multiple documents.
+      operationId: ApiV1DocumentsBatchPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: documentList
+          in: body
+          description: List of new document objects.
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Document'
+      responses:
+        '201':
+          description: Documents created sucessfully.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Document'
+        '400':
+          description: Invalid request.
+  /api/v1/DocumentsInternal:
+    get:
+      tags:
+        - "Documents Internal"
+      summary: Returns a list of published documents.
+      operationId: ApiV1DocumentsInternalGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: limit
+          in: query
+          description: Number of documents to retreive. Used for pagination. Default is 20.
+          required: false
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Index of the page to display starting with 1. Default is 1.
+          required: false
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Documents successufully returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentInternal'
+            example:
+              - id: 1
+                title: Awesome Product User Guide V2018.1
+                product: Awesome Product
+                version: V2018.1
+                htmlLink: AwesomeProduct/UserGuide/V2018-1/index.html
+                pdfLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.pdf
+                wordLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.docx
+                otherLink: null
+                isFitForClients: true
+                shortDescription: "The document provides a description of the main features of <strong>Awesome Product</strong> as well as the main how-to procedures."
+                documentType: User Guide                
+                latestUpdate: "2018-06-11T00:00:00"
+                latestTopicsUpdated: "<ol><li>Create a contact</li><li>Edit a contact</li></ol>"
+                authors:
+                  - id: 1
+                    firstName: Jamie
+                    lastName: Smith
+                    email: jsmith@doc.com
+                    alias: JSMIT
+                    isFormerAuthor: false
+                    aitName: Jamie
+                  - id: 2
+                    firstName: Ariel
+                    lastName: Taylor
+                    email: ataylor@doc.com
+                    alias: ATAYL
+                    isFormerAuthor: true
+                    aitName: Ariel
+                  - id: 3
+                    firstName: Glen
+                    lastName: Williams
+                    email: gwilliams@doc.com
+                    alias: GWILL
+                    isFormerAuthor: false
+                    aitName: Glen
+                clientCatalogs:
+                  - id: 1
+                    name: Awesome Product Knowledge Base
+                    internalId: "000753"
+              - id: 2
+                title: Nice Product Release Notes V2018.1
+                product: Nice Product
+                version: V2018.1
+                htmlLink: null
+                pdfLink: NiceProduct/ReleaseNotes/AwesomeProduct_ReleaseNotes_V2018-1.pdf
+                wordLink: null
+                otherLink: null
+                isFitForClients: true
+                shortDescription: This document contains the new features and bug fixes implemented in V2018.1.
+                documentType: Release Notes              
+                latestUpdate: "2018-06-04T00:00:00"
+                latestTopicsUpdated: V2018.1 Bug Fixes.
+                authors:
+                  - id: 1
+                    firstName: Jamie
+                    lastName: Smith
+                    email: jsmith@doc.com
+                    alias: JSMIT
+                    isFormerAuthor: false
+                    aitName: Jamie                  
+                  - id: 3
+                    firstName: Glen
+                    lastName: Williams
+                    email: gwilliams@doc.com
+                    alias: GWILL
+                    isFormerAuthor: false
+                    aitName: Glen
+                clientCatalogs:
+                  - id: 2
+                    name: Nice Product Release Notes
+                    internalId: "000845"                
+        '400':
+          description: Invalid request.
+        '404':
+          description: No documents found.
+  '/api/v1/DocumentsInternal/{id}':
+    get:
+      tags:
+        - "Documents Internal"
+      summary: Returns a single published document.
+      operationId: ApiV1DocumentsInternalByIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document successfully found.
+          schema:
+            $ref: '#/definitions/DocumentInternal'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Document with the provided ID could not be found.
+  '/api/v1/DocumentsInternal/ByDocType/{docTypeId}':
+    get:
+      tags:
+        - "Documents Internal"
+      summary: Returns a list of published documents of a specified document type.
+      operationId: ApiV1DocumentsInternalByDocTypeByDocTypeIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: docTypeId
+          in: path
+          description: ID of the document type.
+          required: true
+          type: integer
+          format: int32
+        - name: limit
+          in: query
+          description: Number of documents to retreive. Used for pagination. Default is 20.
+          required: false
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Index of the page to display starting with 1. Default is 1.
+          required: false
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Documents successufully returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentInternal'
+            example:
+              - id: 1
+                title: Awesome Product User Guide V2018.1
+                product: Awesome Product
+                version: V2018.1
+                htmlLink: AwesomeProduct/UserGuide/V2018-1/index.html
+                pdfLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.pdf
+                wordLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.docx
+                otherLink: null
+                isFitForClients: true
+                shortDescription: "The document provides a description of the main features of <strong>Awesome Product</strong> as well as the main how-to procedures."
+                documentType: User Guide                
+                latestUpdate: "2018-06-11T00:00:00"
+                latestTopicsUpdated: "<ol><li>Create a contact</li><li>Edit a contact</li></ol>"
+                authors:
+                  - id: 1
+                    firstName: Jamie
+                    lastName: Smith
+                    email: jsmith@doc.com
+                    alias: JSMIT
+                    isFormerAuthor: false
+                    aitName: Jamie
+                  - id: 2
+                    firstName: Ariel
+                    lastName: Taylor
+                    email: ataylor@doc.com
+                    alias: ATAYL
+                    isFormerAuthor: true
+                    aitName: Ariel
+                  - id: 3
+                    firstName: Glen
+                    lastName: Williams
+                    email: gwilliams@doc.com
+                    alias: GWILL
+                    isFormerAuthor: false
+                    aitName: Glen
+                clientCatalogs:
+                  - id: 1
+                    name: Awesome Product Knowledge Base
+                    internalId: "000753"
+        '400':
+          description: Invalid request.
+        '404':
+          description: No documents of the specified type could be found.
+  '/api/v1/DocumentsInternal/ByProduct/{productId}':
+    get:
+      tags:
+        - "Documents Internal"
+      summary: Returns a list of published documents of a specified product.
+      operationId: ApiV1DocumentsInternalByProductByProductIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+        - name: limit
+          in: query
+          description: Number of documents to retreive. Used for pagination. Default is 20.
+          required: false
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Index of the page to display starting with 1. Default is 1.
+          required: false
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Documents successufully returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentInternal'
+            example:
+              - id: 1
+                title: Awesome Product User Guide V2018.1
+                product: Awesome Product
+                version: V2018.1
+                htmlLink: AwesomeProduct/UserGuide/V2018-1/index.html
+                pdfLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.pdf
+                wordLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.docx
+                otherLink: null
+                isFitForClients: true
+                shortDescription: "The document provides a description of the main features of <strong>Awesome Product</strong> as well as the main how-to procedures."
+                documentType: User Guide                
+                latestUpdate: "2018-06-11T00:00:00"
+                latestTopicsUpdated: "<ol><li>Create a contact</li><li>Edit a contact</li></ol>"
+                authors:
+                  - id: 1
+                    firstName: Jamie
+                    lastName: Smith
+                    email: jsmith@doc.com
+                    alias: JSMIT
+                    isFormerAuthor: false
+                    aitName: Jamie
+                  - id: 2
+                    firstName: Ariel
+                    lastName: Taylor
+                    email: ataylor@doc.com
+                    alias: ATAYL
+                    isFormerAuthor: true
+                    aitName: Ariel
+                  - id: 3
+                    firstName: Glen
+                    lastName: Williams
+                    email: gwilliams@doc.com
+                    alias: GWILL
+                    isFormerAuthor: false
+                    aitName: Glen
+                clientCatalogs:
+                  - id: 1
+                    name: Awesome Product Knowledge Base
+                    internalId: "000753"
+        '400':
+          description: Invalid request.
+        '404':
+          description: No documents could be found for the specified product.
+  '/api/v1/DocumentsInternal/ByProductVersion/{productVersionId}':
+    get:
+      tags:
+        - "Documents Internal"
+      summary: Returns a list of published documents of a specified product.
+      operationId: ApiV1DocumentsInternalByProductVersionByProductVersionIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: productVersionId
+          in: path
+          description: ID of the product version.
+          required: true
+          type: integer
+          format: int32
+        - name: limit
+          in: query
+          description: Number of documents to retreive. Used for pagination. Default is 20.
+          required: false
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Index of the page to display starting with 1. Default is 1.
+          required: false
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Documents successufully returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentInternal'
+            example:
+              - id: 1
+                title: Awesome Product User Guide V2018.1
+                product: Awesome Product
+                version: V2018.1
+                htmlLink: AwesomeProduct/UserGuide/V2018-1/index.html
+                pdfLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.pdf
+                wordLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.docx
+                otherLink: null
+                isFitForClients: true
+                shortDescription: "The document provides a description of the main features of <strong>Awesome Product</strong> as well as the main how-to procedures."
+                documentType: User Guide                
+                latestUpdate: "2018-06-11T00:00:00"
+                latestTopicsUpdated: "<ol><li>Create a contact</li><li>Edit a contact</li></ol>"
+                authors:
+                  - id: 1
+                    firstName: Jamie
+                    lastName: Smith
+                    email: jsmith@doc.com
+                    alias: JSMIT
+                    isFormerAuthor: false
+                    aitName: Jamie
+                  - id: 2
+                    firstName: Ariel
+                    lastName: Taylor
+                    email: ataylor@doc.com
+                    alias: ATAYL
+                    isFormerAuthor: true
+                    aitName: Ariel
+                  - id: 3
+                    firstName: Glen
+                    lastName: Williams
+                    email: gwilliams@doc.com
+                    alias: GWILL
+                    isFormerAuthor: false
+                    aitName: Glen
+                clientCatalogs:
+                  - id: 1
+                    name: Awesome Product Knowledge Base
+                    internalId: "000753"
+        '400':
+          description: Invalid request.
+        '404':
+          description: No documents could be found for the specified product version.
+  /api/v1/DocumentsInternal/Search:
+    get:
+      tags:
+        - "Documents Internal"
+      summary: Returns a list of published documents by searching the title, short description and latest updates.
+      operationId: ApiV1DocumentsInternalSearchGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: searchTerm
+          in: query
+          description: Terms used to search for the documents.
+          required: true
+          type: string
+        - name: limit
+          in: query
+          description: Number of documents to retreive. Used for pagination. Default is 20.
+          required: false
+          type: integer
+          format: int32
+        - name: page
+          in: query
+          description: Index of the page to display starting with 1. Default is 1.
+          required: false
+          type: integer
+          format: int32
+        - name: exactMatch
+          in: query
+          description: When set to false, each word in the search term is searched for separately. Otherwise, the search term is used as a whole. Default is true.
+          required: false
+          type: boolean
+      responses:
+        '200':
+          description: Documents successufully returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentInternal'
+            example:
+              - id: 1
+                title: Awesome Product User Guide V2018.1
+                product: Awesome Product
+                version: V2018.1
+                htmlLink: AwesomeProduct/UserGuide/V2018-1/index.html
+                pdfLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.pdf
+                wordLink: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.docx
+                otherLink: null
+                isFitForClients: true
+                shortDescription: "The document provides a description of the main features of <strong>Awesome Product</strong> as well as the main how-to procedures."
+                documentType: User Guide                
+                latestUpdate: "2018-06-11T00:00:00"
+                latestTopicsUpdated: "<ol><li>Create a contact</li><li>Edit a contact</li></ol>"
+                authors:
+                  - id: 1
+                    firstName: Jamie
+                    lastName: Smith
+                    email: jsmith@doc.com
+                    alias: JSMIT
+                    isFormerAuthor: false
+                    aitName: Jamie
+                  - id: 2
+                    firstName: Ariel
+                    lastName: Taylor
+                    email: ataylor@doc.com
+                    alias: ATAYL
+                    isFormerAuthor: true
+                    aitName: Ariel
+                  - id: 3
+                    firstName: Glen
+                    lastName: Williams
+                    email: gwilliams@doc.com
+                    alias: GWILL
+                    isFormerAuthor: false
+                    aitName: Glen
+                clientCatalogs:
+                  - id: 1
+                    name: Awesome Product Knowledge Base
+                    internalId: "000753"
+              - id: 2
+                title: Nice Product Release Notes V2018.1
+                product: Nice Product
+                version: V2018.1
+                htmlLink: null
+                pdfLink: NiceProduct/ReleaseNotes/AwesomeProduct_ReleaseNotes_V2018-1.pdf
+                wordLink: null
+                otherLink: null
+                isFitForClients: true
+                shortDescription: This document contains the new features and bug fixes implemented in V2018.1.
+                documentType: Release Notes              
+                latestUpdate: "2018-06-04T00:00:00"
+                latestTopicsUpdated: V2018.1 Bug Fixes.
+                authors:
+                  - id: 1
+                    firstName: Jamie
+                    lastName: Smith
+                    email: jsmith@doc.com
+                    alias: JSMIT
+                    isFormerAuthor: false
+                    aitName: Jamie                  
+                  - id: 3
+                    firstName: Glen
+                    lastName: Williams
+                    email: gwilliams@doc.com
+                    alias: GWILL
+                    isFormerAuthor: false
+                    aitName: Glen
+                clientCatalogs:
+                  - id: 2
+                    name: Nice Product Release Notes
+                    internalId: "000845"
+        '400':
+          description: Invalid request.
+        '404':
+          description: No documents could be found for the specified product.
+  '/api/v1/DocumentsInternal/{id}/Updates':
+    get:
+      tags:
+        - "Documents Internal"
+      summary: Returns all published updates of a specified document.
+      operationId: ApiV1DocumentsInternalByIdUpdatesGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the document.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document updates successufully returned.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentUpdate'
+            example:
+              - id: 1
+                timestamp: "2018-06-04T00:00:00"
+                latestTopicsUpdated: "This is the first version of the document."
+                isPublished: true
+                documentId: 1
+                rowVersion: AAAAAAAARlE=              
+              - id: 3
+                timestamp: "2018-06-11T00:00:00"
+                latestTopicsUpdated: "<ol><li>Create a contact</li><li>Edit a contact</li></ol>"
+                isPublished: true
+                documentId: 1
+                rowVersion: AAAAAAAARlE=
+        '400':
+          description: Invalid request.
+        '404':
+          description: No updates could be found for the specified document.
+  /api/v1/DocumentTypes:
+    get:
+      tags:
+        - "Document Types"
+      summary: Returns all document types.
+      operationId: ApiV1DocumentTypesGet
+      consumes: []
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Document types successfully retrieved.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentType'
+            example:
+              - id: 1
+                fullName: User Guide
+                shortName: UG
+                documentCategory: 0
+              - id: 2
+                fullName: Release Notes
+                shortName: RN
+                documentCategory: 1
+        '404':
+          description: No document types were found.
+    post:
+      tags:
+        - "Document Types"
+      summary: Creates a Document Type.
+      operationId: ApiV1DocumentTypesPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: documentType
+          in: body
+          description: Document Type object.
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentType'
+      responses:
+        '201':
+          description: Returns the newly created document type.
+          schema:
+            $ref: '#/definitions/DocumentType'
+        '400':
+          description: Invalid request.
+  '/api/v1/DocumentTypes/{id}':
+    get:
+      tags:
+        - "Document Types"
+      summary: Returns a single document type.
+      operationId: ApiV1DocumentTypesByIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the document type.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document type successfully retrieved.
+          schema:
+            $ref: '#/definitions/DocumentType'
+        '400':
+          description: Invalid request.
+        '404':
+          description: No document types with the matching ID were found.
+    put:
+      tags:
+        - "Document Types"
+      summary: Updates an existing Document Type.
+      operationId: ApiV1DocumentTypesByIdPut
+      consumes:
+        - application/json
+      produces: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the Document Type.
+          required: true
+          type: integer
+          format: int32
+        - name: documentType
+          in: body
+          description: Document Type object.
+          required: true
+          schema:
+            $ref: '#/definitions/DocumentType'
+      responses:
+        '204':
+          description: Update is successuful.
+        '400':
+          description: Request is incorrect or ID from the path does not match the ID of the document type.
+        '404':
+          description: Document type does not exist.
+    delete:
+      tags:
+        - "Document Types"
+      summary: Deletes a Document Type.
+      operationId: ApiV1DocumentTypesByIdDelete
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the document type object.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Document type sucessufully deleted.
+          schema:
+            $ref: '#/definitions/DocumentType'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Document type with the provided ID could not be found.
+  /api/v1/DocumentTypes/Categories:
+    get:
+      tags:
+        - "Document Types"
+      summary: Returns a list of all document categories as key-value pairs.
+      description: "Provided for informational purposes only.\r\nKey: Category ID\r\nValue: Category Name"
+      operationId: ApiV1DocumentTypesCategoriesGet
+      consumes: []
+      produces:        
+        - application/json        
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DocumentCategory'
+            example:
+              - key: 0
+                value: FunctionalDocumentation
+              - key: 1
+                value: TechnicalDocumentation
+              - key: 2
+                value: ReleaseNotes
+              - key: 3
+                value: Other
+  /api/v1/Products:
+    get:
+      tags:
+        - Products
+      summary: Returns all products.
+      operationId: ApiV1ProductsGet
+      consumes: []
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Products successfully retrieved.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+            example:
+              - id: 1
+                fullName: Awesome Product
+                shortName: AWP
+                alias: Product 1
+              - id: 2
+                fullName: Nice Product
+                shortName: NP
+                alias: Product 2
+        '404':
+          description: No products were found.
+    post:
+      tags:
+        - Products
+      summary: Creates a product.
+      operationId: ApiV1ProductsPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: product
+          in: body
+          description: Product object.
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '201':
+          description: Returns the newly created product.
+          schema:
+            $ref: '#/definitions/Product'
+        '400':
+          description: Invalid request.
+  '/api/v1/Products/{id}':
+    get:
+      tags:
+        - Products
+      summary: Returns a single product by ID.
+      operationId: ApiV1ProductsByIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Product successfully retrieved.
+          schema:
+            $ref: '#/definitions/Product'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Products with matching ID not found.
+    put:
+      tags:
+        - Products
+      summary: Updates a single product.
+      operationId: ApiV1ProductsByIdPut
+      consumes:
+        - application/json
+      produces: []
+      parameters:
+        - name: id
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+        - name: product
+          in: body
+          description: Product object.
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      responses:
+        '204':
+          description: Update is successuful.
+        '400':
+          description: Request is incorrect or ID from the path does not match the ID of the product.
+        '404':
+          description: Product does not exist.
+    delete:
+      tags:
+        - Products
+      summary: Deletes a product.
+      operationId: ApiV1ProductsByIdDelete
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Product sucessufully deleted.
+          schema:
+            $ref: '#/definitions/Product'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Product with the provided ID could not be found.
+  '/api/v1/Products/{productId}/Versions':
+    get:
+      tags:
+        - Products
+      summary: Returns a list of versions associated to a product.
+      operationId: ApiV1ProductsByProductIdVersionsGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Product versions successfully retrieved.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProductVersion'
+            example:
+              - id: 1
+                product: Awesome Product
+                release: V2018.1
+                endOfSupport: "2019-02-01T00:00:00"
+                isSupported: true
+              - id: 2
+                product: Awesome Product
+                release: V2018.2
+                endOfSupport: "2019-04-01T00:00:00"
+                isSupported: true
+              - id: 3
+                product: Nice Product
+                release: V2018.1
+                endOfSupport: "2019-02-01T00:00:00"
+                isSupported: true
+              - id: 3
+                product: Nice Product
+                release: V2018.2
+                endOfSupport: "2019-04-01T00:00:00"
+                isSupported: true
+        '400':
+          description: Invalid request.
+        '404':
+          description: Products versions with matching product ID not found.
+    post:
+      tags:
+        - Products
+      summary: Creates a new version of a product.
+      operationId: ApiV1ProductsByProductIdVersionsPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+        - name: productVersion
+          in: body
+          description: Product version object.
+          required: true
+          schema:
+            $ref: '#/definitions/ProductVersion'
+      responses:
+        '201':
+          description: Returns the newly created product version.
+          schema:
+            $ref: '#/definitions/ProductVersion'
+        '400':
+          description: Invalid request.
+  '/api/v1/Products/{productId}/Versions/{versionId}':
+    get:
+      tags:
+        - Products
+      summary: Returns a single version associated to a product.
+      operationId: ApiV1ProductsByProductIdVersionsByVersionIdGet
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+        - name: versionId
+          in: path
+          description: ID of the version.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Product version successfully retrieved.
+          schema:
+            $ref: '#/definitions/ProductVersion'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Product versions with matching ID not found.
+    put:
+      tags:
+        - Products
+      summary: Updates a version of a product.
+      operationId: ApiV1ProductsByProductIdVersionsByVersionIdPut
+      consumes:
+        - application/json
+      produces: []
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+        - name: versionId
+          in: path
+          description: ID of the version.
+          required: true
+          type: integer
+          format: int32
+        - name: productVersion
+          in: body
+          description: Product version object.
+          required: false
+          schema:
+            $ref: '#/definitions/ProductVersion'
+      responses:
+        '204':
+          description: Update is successuful.
+        '400':
+          description: Request is incorrect or ID from the path does not match the ID of the product version.
+        '404':
+          description: Product version does not exist.
+    delete:
+      tags:
+        - Products
+      summary: Deletes a product version.
+      operationId: ApiV1ProductsByProductIdVersionsByVersionIdDelete
+      consumes: []
+      produces:
+        - application/json
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+        - name: versionId
+          in: path
+          description: ID of the version.
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Product version sucessufully deleted.
+          schema:
+            $ref: '#/definitions/ProductVersion'
+        '400':
+          description: Invalid request.
+        '404':
+          description: Product version with the provided ID could not be found.
+  /api/v1/Products/Batch:
+    post:
+      tags:
+        - Products
+      summary: Creates multiple products.
+      operationId: ApiV1ProductsBatchPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: productList
+          in: body
+          description: List of product objects.
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+      responses:
+        '201':
+          description: Action is successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+        '400':
+          description: Invalid request.
+  '/api/v1/Products/{productId}/Versions/Batch':
+    post:
+      tags:
+        - Products
+      summary: Creates multiple product versions.
+      operationId: ApiV1ProductsByProductIdVersionsBatchPost
+      consumes:
+        - application/json-patch+json
+        - application/json
+        - text/json
+        - application/*+json
+      produces:
+        - application/json
+      parameters:
+        - name: productId
+          in: path
+          description: ID of the product.
+          required: true
+          type: integer
+          format: int32
+        - name: productVersionList
+          in: body
+          description: List of product version objects.
+          required: true
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProductVersion'
+      responses:
+        '201':
+          description: Action is successful.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProductVersion'
+        '400':
+          description: Invalid request.
+definitions:
+  Author:
+    description: Represents a document author.
+    required:
+      - firstName
+      - lastName
+      - email
+      - alias
+    type: object
+    properties:
+      id:
+        format: int32
+        description: ID of the author.
+        type: integer
+        example: 1
+      firstName:
+        description: First name of the author.
+        maxLength: 50
+        minLength: 0
+        type: string
+        example: Jamie
+      lastName:
+        description: Last name of the author.
+        maxLength: 50
+        minLength: 0
+        type: string
+        example: Smith
+      email:
+        description: Email address of the author.
+        type: string
+        example: jsmith@doc.com
+      alias:
+        maxLength: 7
+        minLength: 0
+        type: string
+        example: JSMIT
+      isFormerAuthor:
+        description: Is former employee.
+        type: boolean
+        example: false
+      aitName:
+        description: Author-IT name of the author.
+        maxLength: 10
+        minLength: 4
+        type: string
+        example: Jamie
+  ClientCatalog:
+    description: Represents a client documentation catalog.
+    required:
+      - name
+    type: object
+    properties:
+      id:
+        format: int32
+        description: ID of the client catalog.
+        type: integer
+        example: 1
+      name:
+        description: Name of the client catalog.
+        maxLength: 50
+        minLength: 0
+        type: string
+        example: Awesome Product Knowledge Base
+      internalId:
+        description: ID used for integration with other internal systems.
+        type: string
+        example: "000753"
+  Document:
+    description: Represents a document with all the related entity IDs.
+    required:
+      - title
+    type: object
+    properties:
+      id:
+        format: int32
+        description: ID of the document.
+        type: integer
+        example: 1
+      title:
+        description: Title of the document.
+        type: string
+        example: Awesome Product User Guide V2018.1
+      htmlLink:
+        description: Relative path to the HTML output of the document.
+        type: string
+        example: "AwesomeProduct/UserGuide/V2018-1/index.html"
+      pdfLink:
+        description: Relative path to the PDF output of the document.
+        type: string
+        example: "AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.pdf"
+      wordLink:
+        description: Relative path to the Word output of the document.
+        type: string
+        example: "AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.docx"
+      otherLink:
+        description: Relative path to a misc output of the document.
+        type: string
+        example: null
+      isFitForClients:
+        description: Is document available to clients.
+        type: boolean
+        example: true
+      shortDescription:
+        description: Short description of the document.
+        type: string
+        example: "The document provides a description of the main features of <strong>Awesome Product</strong> as well as the main how-to procedures."
+      aitId:
+        format: int32
+        description: Author-ID ID of the document.
+        type: integer
+        example: 78965
+      documentAuthorIds:
+        description: List of related author IDs.
+        type: array
+        items:
+          format: int32
+          type: integer
+        example:
+          - 1
+          - 2
+          - 3
+      documentCatalogIds:
+        description: List of related client catalog IDs.
+        type: array
+        items:
+          format: int32
+          type: integer
+        example:
+          - 1
+      latestTopicsUpdated:
+        description: List of the latest updated topics.
+        type: string
+        example: This is the first version of the document.
+      isPublished:
+        description: Used to restrict the visibility of the update during publishing.
+        type: boolean
+        example: true
+      parentDocumentId:
+        format: int32
+        description: ID of the parent document.
+        type: integer        
+      productVersionId:
+        format: int32
+        description: ID of the related product version.
+        type: integer
+        example: 1
+      documentTypeId:
+        format: int32
+        description: ID of the related document type.
+        type: integer
+        example: 2
+      rowVersion:
+        format: byte
+        description: Used to prevent DB concurrency issues during updates.
+        type: string
+        example: AAAAAAAAB9E=
+  DocumentUpdate:
+    description: Represents a version of a document.
+    type: object
+    properties:
+      id:
+        format: int32
+        description: ID of the document update.
+        type: integer
+        example: 1
+      timestamp:
+        format: date-time
+        description: Date and time of the update.
+        type: string
+        example: "2018-06-04T00:00:00"
+      latestTopicsUpdated:
+        description: List of the latest updated topics.
+        type: string
+        example: This is the first version of the document.
+      isPublished:
+        description: Used to restrict the visibility of the update during publishing.
+        type: boolean
+        example: true
+      documentId:
+        format: int32
+        description: Link to the related document.
+        type: integer
+        example: 1
+      rowVersion:
+        format: byte
+        description: Used to prevent DB concurrency issues during updates.
+        type: string
+        example: AAAAAAAARlE=
+  DocumentInternal:
+    description: Represent a Document published to internal users.
+    type: object
+    properties:
+      id:
+        format: int32
+        description: ID of the document.
+        type: integer
+        example: 1
+      title:
+        description: Title of the document.
+        type: string
+        example: Awesome Product User Guide V2018.1
+      product:
+        description: Product related to the document.
+        type: string
+        example: Awesome Product
+      version:
+        description: Product version related to the document.
+        type: string
+        example: V2018.1
+      htmlLink:
+        description: Relative path to the HTML output of the document.
+        type: string
+        example: AwesomeProduct/UserGuide/V2018-1/index.html
+      pdfLink:
+        description: Relative path to the PDF output of the document.
+        type: string
+        example: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.pdf
+      wordLink:
+        description: Relative path to the Word output of the document.
+        type: string
+        example: AwesomeProduct/UserGuide/V2018-1/AwesomeProduct_UserGuide_V2018-1.docx
+      otherLink:
+        description: Relative path to a misc output of the document.
+        type: string
+        example: null
+      isFitForClients:
+        description: Is document available for clients.
+        type: boolean
+        example: true
+      shortDescription:
+        description: Short description of the document.
+        type: string
+        example: The document provides a description of the main features of <strong>Awesome Product</strong> as well as the main how-to procedures.
+      documentType:
+        description: Document type.
+        type: string
+        example: User Guide
+      latestUpdate:
+        format: date-time
+        description: Date of the latest update.
+        type: string
+        example: "2018-06-04T00:00"
+      latestTopicsUpdated:
+        description: List of the latest updated topics.
+        type: string
+        example: This is the first version of the document.
+      authors:
+        description: Link to the related authors.
+        type: array
+        items:
+          $ref: '#/definitions/Author'        
+      clientCatalogs:
+        description: Link to the related client catalogs.
+        type: array
+        items:
+          $ref: '#/definitions/ClientCatalog'
+  DocumentType:
+    description: Represents a document type. Each document is linked to a single type that further classifies it.
+    required:
+      - fullName
+      - shortName
+    type: object
+    properties:
+      id:
+        format: int32
+        description: ID of the document type.
+        type: integer
+        example: 1
+      fullName:
+        description: Full name of the document type.
+        type: string
+        example: User Guide
+      shortName:
+        description: Short name (code) of the document type.
+        maxLength: 5
+        minLength: 0
+        type: string
+        example: UG
+      documentCategory:
+        format: int32
+        description: Category of the document type.
+        enum:
+          - 0
+          - 1
+          - 2
+          - 3
+        type: integer
+        example: 0    
+  DocumentCategory:
+    description: Represents a Document Category. Read-only enumeration. Each document type is linked to a single category.
+    type: object
+    properties:
+      key:
+        format: int32
+        type: integer
+        readOnly: true
+        example: 0
+      value:
+        type: string
+        readOnly: true
+        example: FunctionalDocumentation
+  Product:
+    description: Represents a Product. 
+    required:
+      - fullName
+      - shortName
+    type: object
+    properties:
+      id:
+        format: int32
+        description: Id of the product.
+        type: integer
+        example: 1
+      fullName:
+        description: Marketing name of the product.
+        type: string
+        example: Awesome Product
+      shortName:
+        description: Short name of the product.
+        maxLength: 7
+        minLength: 0
+        type: string
+        example: AWP
+      alias:
+        description: Used for old product names.
+        minLength: 4
+        type: string
+        example: Product 1
+  ProductVersion:
+    description: Represents a Product Version (Release).
+    required:
+      - release
+    type: object
+    properties:
+      id:
+        format: int32
+        description: ID of the product version.
+        type: integer
+        example: 1
+      product:
+        description: Marketing name of the product.
+        type: string
+        example: Awesome Product
+      release:
+        description: Release version of the product.
+        maxLength: 10
+        minLength: 0
+        type: string
+        example: V2018.1
+      endOfSupport:
+        format: date-time
+        description: End of support date.
+        type: string
+        example: "2019-02-01T00:00:00"
+      isSupported:
+        description: True if the version is still supported.
+        type: boolean
+        readOnly: true
+        example: true
