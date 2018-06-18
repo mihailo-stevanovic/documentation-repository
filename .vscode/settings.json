@@ -1,0 +1,4 @@
+{
+      // The folder that contains conf.py relative to workspace root. This is an absolute path, and you can use ${workspaceRoot} to represent workspace root folder.
+  "restructuredtext.confPath": "${workspaceRoot}\\API\\Documentation\\Sphinx\\source"
+}
