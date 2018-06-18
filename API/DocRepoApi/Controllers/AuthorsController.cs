@@ -204,7 +204,7 @@ namespace DocRepoApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            IEnumerable<Author> authorReversedList = AuthorList.Select(a => _mapper.Map<Author>(a));
+            List<Author> authorReversedList = AuthorList.Select(a => _mapper.Map<Author>(a)).ToList();
 
             _context.Authors.AddRange(authorReversedList);
             await _context.SaveChangesAsync();

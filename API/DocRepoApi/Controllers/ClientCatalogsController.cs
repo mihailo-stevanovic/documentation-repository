@@ -166,7 +166,7 @@ namespace DocRepoApi.Controllers
         /// </summary>
         /// <param name="clientCatalogList">List of client catalog objects.</param>
         /// <returns>List of client catalog objects or description of error.</returns>
-        /// <response code="204">Action is successful.</response>
+        /// <response code="201">Action is successful.</response>
         /// <response code="400">Invalid request.</response>
         [HttpPost("Batch")]
         [ProducesResponseType(typeof(IEnumerable<ClientCatalogDto>), 201)]
@@ -178,7 +178,7 @@ namespace DocRepoApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            IEnumerable<ClientCatalog> clientCatalogReversedList = clientCatalogList.Select(c => _mapper.Map<ClientCatalog>(c));
+            List<ClientCatalog> clientCatalogReversedList = clientCatalogList.Select(c => _mapper.Map<ClientCatalog>(c)).ToList();
 
             _context.ClientCatalogs.AddRange(clientCatalogReversedList);
             await _context.SaveChangesAsync();

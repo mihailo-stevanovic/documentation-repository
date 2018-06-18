@@ -361,11 +361,11 @@ namespace DocRepoApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Product product = _context.Products.SingleOrDefault(p => p.Id == productId);
+            Product product = _context.Products.SingleOrDefault(p => p.Id == productId);
 
             var productVersionReversed = _mapper.Map<ProductVersion>(productVersion);
 
-            productVersionReversed.ProductId = productId;     
+            productVersionReversed.Product = product;     
 
             _context.ProductVersions.Add(productVersionReversed);
             await _context.SaveChangesAsync();
