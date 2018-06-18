@@ -19,9 +19,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'DocRepoApiDevGuide'
-copyright = '2018, Mihailo Stevanović'
-author = 'Mihailo Stevanović'
+project = u'DocRepoApiDevGuide'
+copyright = u'2018, Mihailo Stevanović'
+author = u'Mihailo Stevanović'
 
 # The short X.Y version
 version = ''
