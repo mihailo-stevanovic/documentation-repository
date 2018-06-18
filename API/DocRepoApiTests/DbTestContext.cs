@@ -2,6 +2,7 @@
 using DocRepoApi.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace DocRepoApiTests
         /// <returns>Test database context with data.</returns>
         public static DocRepoContext GenerateContextWithData()
         {
-            var options = new DbContextOptionsBuilder<DocRepoContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).Options;
+            var options = new DbContextOptionsBuilder<DocRepoContext>().UseInMemoryDatabase(Guid.NewGuid().ToString()).EnableSensitiveDataLogging().Options;
             var context = new DocRepoContext(options);
 
             //var db = new DbContextOptionsBuilder();
@@ -133,6 +134,7 @@ namespace DocRepoApiTests
                     Updates = Enumerable.Range(1, 10)
                             .Select(j => new DocumentUpdate
                             {
+                                //Id = j + ( i - 1) * 10,
                                 IsPublished = (i % 2 == 0),
                                 LatestTopicsUpdated = $"Document {i} - Version {j}",
                                 Timestamp = DateTime.Today.AddDays(j)

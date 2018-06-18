@@ -284,7 +284,7 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
                 var result = await controller.GetDocumentUpdates(4);
-                DocumentUpdateDto upTest = GetTestDocumentUpdateDto(4, 10);
+                DocumentUpdateDto upTest = _mapper.Map<DocumentUpdateDto>(context.DocumentUpdates.Last(u => u.DocumentId == 4));
 
                 Assert.NotNull(result);
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);
@@ -295,7 +295,7 @@ namespace DocRepoApiTests.ControllerTests
                 IEnumerable<DocumentUpdateDto> resultValueList = (IEnumerable<DocumentUpdateDto>)resultValue;
                 Assert.True(resultValueList.Count().Equals(10));
 
-                DocumentUpdateDto up = resultValueList.Single(u => u.Id == 40);
+                DocumentUpdateDto up = resultValueList.Single(u => u.Id == upTest.Id);
 
                 Assert.True(upTest.Equals(up));
                 Assert.True(upTest.Equals(up, true));
@@ -418,15 +418,17 @@ namespace DocRepoApiTests.ControllerTests
             using (var context = DbTestContext.GenerateContextWithData())
             using (var controller = new DocumentsController(context, _mapper))
             {
-                var result = await controller.DeleteDocumentUpdate(1, 1);
-                DocumentUpdateDto a3 = GetTestDocumentUpdateDto(1, 1);
+                DocumentUpdate dup = context.DocumentUpdates.AsNoTracking().Last();
+
+                var result = await controller.DeleteDocumentUpdate(dup.DocumentId, dup.Id);
+                DocumentUpdateDto a3 = _mapper.Map<DocumentUpdateDto>(dup);
 
                 Assert.NotNull(result);
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);
                 var resultValue = okObjectResult.Value;
                 Assert.Equal(a3, resultValue);
 
-            }
+            }            
         }
 
         [Fact(DisplayName = "DeleteDocumentUpdate(1,999) should return NotFound")]
