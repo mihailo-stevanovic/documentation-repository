@@ -112,11 +112,11 @@ htmlhelp_basename = 'DocRepoApiDevGuidedoc'
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
     #
-    # 'papersize': 'letterpaper',
+    'papersize': 'a4paper',
 
     # The font size ('10pt', '11pt' or '12pt').
     #
-    # 'pointsize': '10pt',
+    'pointsize': '11pt',
 
     # Additional stuff for the LaTeX preamble.
     #
@@ -190,3 +190,9 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+# Substitutions (variables)
+rst_prolog = """
+.. |API| replace:: Documentation Repository API
+.. |**API**| replace:: **Documentation Repository API**
+"""
