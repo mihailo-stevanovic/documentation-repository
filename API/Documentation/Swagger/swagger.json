@@ -7,7 +7,15 @@
     "contact": {
       "email": "mihailo.stev@gmail.com",
       "name": "Mihailo Stevanović"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://raw.githubusercontent.com/mihailo-stevanovic/documentation-repository/master/LICENSE.txt"
     }
+  },
+  "externalDocs": {
+    "description": "Developer Guide",
+    "url": "http://documentation-repository-api.rtfd.io/"
   },
   "tags": [
     {
