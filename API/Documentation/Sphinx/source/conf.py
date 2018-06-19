@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'DocRepoApiDevGuide'
+project = u'Documentation Repository - Developer Guide'
 copyright = u'2018, Mihailo Stevanović'
 author = u'Mihailo Stevanović'
 
@@ -131,7 +131,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'DocRepoApiDevGuide.tex', 'DocRepoApiDevGuide Documentation',
+    (master_doc, 'DocRepoApiDevGuide.tex', 'Documentation Repository - Developer Guide',
      u'Mihailo Stevanović', 'manual'),
 ]
 
@@ -141,7 +141,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'docrepoapidevguide', 'DocRepoApiDevGuide Documentation',
+    (master_doc, 'docrepoapidevguide', 'Documentation Repository - Developer Guide',
      [author], 1)
 ]
 
@@ -152,8 +152,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'DocRepoApiDevGuide', 'DocRepoApiDevGuide Documentation',
-     author, 'DocRepoApiDevGuide', 'One line description of project.',
+    (master_doc, 'DocRepoApiDevGuide', 'Documentation Repository - Developer Guide',
+     author, 'Documentation Repository - Developer Guide', 'One line description of project.',
      'Miscellaneous'),
 ]
 
