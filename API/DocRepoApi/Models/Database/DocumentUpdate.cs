@@ -54,15 +54,16 @@ namespace DocRepoApi.Models
             }
             else
             {
-                int comparedTimestamp = this.Timestamp.CompareTo(other.Timestamp) * -1;
-                if (comparedTimestamp == 0)
-                {
-                    return this.Id.CompareTo(other.Id) * -1;
-                }
-                else
-                {
-                    return comparedTimestamp;
-                }
+                return this.Timestamp.CompareTo(other.Timestamp) * -1;
+                //int comparedTimestamp = this.Timestamp.CompareTo(other.Timestamp) * -1;
+                //if (comparedTimestamp == 0)
+                //{
+                //    return this.Id.CompareTo(other.Id) * -1;
+                //}
+                //else
+                //{
+                //    return comparedTimestamp;
+                //}
             }
 
         }

@@ -27,13 +27,13 @@ namespace DocRepoApiTests.ControllerTests
 
         #region GET: api/v1/DocumentsInternal Tests
         [Fact(DisplayName = "GetDocuments() should return a list of the first 20 Documents")]
-        public void GetDocumentsReturnsListOfDocuments()
+        public async void GetDocumentsReturnsListOfDocuments()
         {
             using (var context = DbTestContext.GenerateContextWithData())
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
-                var result = controller.GetDocuments();
-                DocumentDtoInternal d4 = GetTestDocumentDtoFromContext(4);
+                var result = await controller.GetDocuments();
+                DocumentDtoInternal d4 = GetTestDocumentDtoFromContext(84);
 
                 Assert.NotNull(result);
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);
@@ -44,19 +44,19 @@ namespace DocRepoApiTests.ControllerTests
                 IEnumerable<DocumentDtoInternal> resultValueList = (IEnumerable<DocumentDtoInternal>)resultValue;
                 Assert.True(resultValueList.Count().Equals(20));
 
-                DocumentDtoInternal d = (DocumentDtoInternal)resultValueList.Single(r => r.Id == 4);
+                DocumentDtoInternal d = (DocumentDtoInternal)resultValueList.Single(r => r.Id == 84);
                 Assert.True(d.Equals(d4));
                 Assert.True(d.Equals(d4, true));
 
             }
         }
         [Fact(DisplayName = "GetDocuments(50) should return a list of the first 50 Documents")]
-        public void GetDocuments50ReturnsListOfDocuments()
+        public async void GetDocuments50ReturnsListOfDocuments()
         {
             using (var context = DbTestContext.GenerateContextWithData())
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
-                var result = controller.GetDocuments(50);
+                var result = await controller.GetDocuments(50);
                 DocumentDtoInternal d4 = GetTestDocumentDtoFromContext(4);
 
                 Assert.NotNull(result);
@@ -75,12 +75,12 @@ namespace DocRepoApiTests.ControllerTests
             }
         }
         [Fact(DisplayName = "GetDocuments(20,2) should return a list of the second 20 Documents")]
-        public void GetDocuments20_2ReturnsListOfDocuments()
+        public async void GetDocuments20_2ReturnsListOfDocuments()
         {
             using (var context = DbTestContext.GenerateContextWithData())
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
-                var result = controller.GetDocuments(20, 2);
+                var result = await controller.GetDocuments(20, 2);
                 DocumentDtoInternal d44 = GetTestDocumentDtoFromContext(44);
 
                 Assert.NotNull(result);
@@ -100,12 +100,12 @@ namespace DocRepoApiTests.ControllerTests
         }
 
         [Fact(DisplayName = "GetDocuments() should return NotFound if context is empty")]
-        public void GetDocumentsEmptyContextNotFound()
+        public async void GetDocumentsEmptyContextNotFound()
         {
             using (var context = DbTestContext.GenerateEmptyContext())
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
-                var result = controller.GetDocuments();
+                var result = await controller.GetDocuments();
 
                 Assert.IsType<NotFoundResult>(result);
 
@@ -113,12 +113,12 @@ namespace DocRepoApiTests.ControllerTests
         }
 
         [Fact(DisplayName = "GetDocuments(50,5) should return NotFound if page is empty")]
-        public void GetDocuments50_5NotFound()
+        public async void GetDocuments50_5NotFound()
         {
             using (var context = DbTestContext.GenerateContextWithData())
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
-                var result = controller.GetDocuments(50, 5);
+                var result = await controller.GetDocuments(50, 5);
 
                 Assert.IsType<NotFoundResult>(result);
 
@@ -126,13 +126,13 @@ namespace DocRepoApiTests.ControllerTests
         }
 
         [Fact(DisplayName = "GetDocuments() should return Bad Request if Model with Error")]
-        public void GetDocumentsBadModel()
+        public async void GetDocumentsBadModel()
         {
             using (var context = DbTestContext.GenerateContextWithData())
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
                 controller.ModelState.AddModelError("an error", "some error");
-                var result = controller.GetDocuments();
+                var result = await controller.GetDocuments();
 
                 Assert.IsType<BadRequestObjectResult>(result);
 
@@ -201,7 +201,7 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
                 var result = await controller.GetDocumentsByProduct(1);
-                DocumentDtoInternal d4 = GetTestDocumentDtoFromContext(4);
+                DocumentDtoInternal d4 = GetTestDocumentDtoFromContext(84);
 
                 Assert.NotNull(result);
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);
@@ -212,7 +212,7 @@ namespace DocRepoApiTests.ControllerTests
                 IEnumerable<DocumentDtoInternal> resultValueList = (IEnumerable<DocumentDtoInternal>)resultValue;
                 Assert.True(resultValueList.Count().Equals(20));
 
-                DocumentDtoInternal d = (DocumentDtoInternal)resultValueList.Single(r => r.Id == 4);
+                DocumentDtoInternal d = (DocumentDtoInternal)resultValueList.Single(r => r.Id == 84);
                 Assert.True(d.Equals(d4));
                 Assert.True(d.Equals(d4, true));
 
@@ -225,7 +225,7 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
                 var result = await controller.GetDocumentsByProduct(1,10);
-                DocumentDtoInternal d4 = GetTestDocumentDtoFromContext(4);
+                DocumentDtoInternal d4 = GetTestDocumentDtoFromContext(84);
 
                 Assert.NotNull(result);
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);
@@ -236,7 +236,7 @@ namespace DocRepoApiTests.ControllerTests
                 IEnumerable<DocumentDtoInternal> resultValueList = (IEnumerable<DocumentDtoInternal>)resultValue;
                 Assert.True(resultValueList.Count().Equals(10));
 
-                DocumentDtoInternal d = (DocumentDtoInternal)resultValueList.Single(r => r.Id == 4);
+                DocumentDtoInternal d = (DocumentDtoInternal)resultValueList.Single(r => r.Id == 84);
                 Assert.True(d.Equals(d4));
                 Assert.True(d.Equals(d4, true));
 
@@ -249,7 +249,7 @@ namespace DocRepoApiTests.ControllerTests
             using (var controller = new DocumentsInternalController(context, _mapper))
             {
                 var result = await controller.GetDocumentsByProduct(1, 10, 2);
-                DocumentDtoInternal d24 = GetTestDocumentDtoFromContext(24);
+                DocumentDtoInternal d24 = GetTestDocumentDtoFromContext(54);
 
                 Assert.NotNull(result);
                 var okObjectResult = Assert.IsType<OkObjectResult>(result);
@@ -260,7 +260,7 @@ namespace DocRepoApiTests.ControllerTests
                 IEnumerable<DocumentDtoInternal> resultValueList = (IEnumerable<DocumentDtoInternal>)resultValue;
                 Assert.True(resultValueList.Count().Equals(10));
 
-                DocumentDtoInternal d = (DocumentDtoInternal)resultValueList.Single(r => r.Id == 24);
+                DocumentDtoInternal d = (DocumentDtoInternal)resultValueList.Single(r => r.Id == 54);
                 Assert.True(d.Equals(d24));
                 Assert.True(d.Equals(d24, true));
 

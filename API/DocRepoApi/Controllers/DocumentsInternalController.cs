@@ -34,8 +34,8 @@ namespace DocRepoApi.Controllers
                 .Include(d => d.DocumentType)
                 .Include(d => d.Updates)
                 .Include(d => d.ProductVersion)
-                .Include(d => d.ProductVersion.Product);            
-        } 
+                .Include(d => d.ProductVersion.Product);                       
+        }        
 
         #endregion
 
@@ -54,25 +54,29 @@ namespace DocRepoApi.Controllers
         [ProducesResponseType(typeof(IEnumerable<DocumentDtoInternal>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult GetDocuments([FromQuery]int limit = 20, [FromQuery]int page = 1)
+        public async Task<IActionResult> GetDocuments([FromQuery]int limit = 20, [FromQuery]int page = 1)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var documents = BuildDocumentQuery()
-                .Select(d => _mapper.Map<DocumentDtoInternal>(d))
-                .OrderByDescending(d => d.LatestUpdate)
+            var documents = await BuildDocumentQuery()                
+                .ToListAsync();
+
+            var documentsDto = documents.Select(d => _mapper.Map<DocumentDtoInternal>(d))
+                .OrderByDescending(d => d.LatestUpdate).ThenBy(d => d.Product).ThenByDescending(d => d.Version)
                 .Skip((page - 1) * limit)
                 .Take(limit);
 
-            if (!documents.Any())
+            if (!documentsDto.Any())
             {
                 return NotFound();
             }
 
-            return Ok(documents);
+            
+
+            return Ok(documentsDto);
         }
 
         // GET: api/v1/DocumentsInternal/5
@@ -132,7 +136,10 @@ namespace DocRepoApi.Controllers
                 .Where(d => d.DocumentTypeId == docTypeId)
                 .ToListAsync();
 
-            var documentsDto = documents.Select(d => _mapper.Map<DocumentDtoInternal>(d)).OrderByDescending(d => d.LatestUpdate).Skip((page - 1) * limit).Take(limit);
+            var documentsDto = documents.Select(d => _mapper.Map<DocumentDtoInternal>(d))
+                .OrderByDescending(d => d.LatestUpdate).ThenBy(d => d.Product).ThenByDescending(d => d.Version)
+                .Skip((page - 1) * limit)
+                .Take(limit);
 
             if (!documentsDto.Any())
             {
@@ -168,7 +175,10 @@ namespace DocRepoApi.Controllers
                 .Where(d => d.ProductVersion.ProductId == productId)
                 .ToListAsync();
 
-            var documentsDto = documents.Select(d => _mapper.Map<DocumentDtoInternal>(d)).OrderByDescending(d => d.LatestUpdate).Skip((page - 1) * limit).Take(limit);
+            var documentsDto = documents.Select(d => _mapper.Map<DocumentDtoInternal>(d))
+                .OrderByDescending(d => d.LatestUpdate).ThenByDescending(d => d.Version)
+                .Skip((page - 1) * limit)
+                .Take(limit);
 
             if (!documentsDto.Any())
             {
@@ -204,7 +214,10 @@ namespace DocRepoApi.Controllers
                 .Where(d => d.ProductVersionId == productVersionId)                
                 .ToListAsync();
 
-            var documentsDto = documents.Select(d => _mapper.Map<DocumentDtoInternal>(d)).OrderByDescending(d => d.LatestUpdate).Skip((page - 1) * limit).Take(limit);
+            var documentsDto = documents.Select(d => _mapper.Map<DocumentDtoInternal>(d))
+                .OrderByDescending(d => d.LatestUpdate)
+                .Skip((page - 1) * limit)
+                .Take(limit);
 
             if (!documentsDto.Any())
             {
