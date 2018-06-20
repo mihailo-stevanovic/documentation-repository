@@ -13,5 +13,6 @@ The |API| is RESTful API built using ASP.NET Core 2.0. It is used for publishing
    :caption: Table of Contents
    
    overview
+   internal_docs/main
    authors
    swagger

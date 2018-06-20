@@ -14,7 +14,7 @@ The API was designed three basic applications:
 
 The API enables you to work with the following entities:
 
-* Internal Documents
+* :doc:`internal_docs/main`
 * :doc:`authors` 
 * Client Catalogs
 * Documents
