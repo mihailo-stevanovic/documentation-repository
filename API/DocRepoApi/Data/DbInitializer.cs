@@ -38,7 +38,7 @@ namespace DocRepoApi.Data
 
             var clientCatalogs = new ClientCatalog[]
                 {
-                    new ClientCatalog { Name = "Awesome Product - Release Notes" },
+                    new ClientCatalog { Name = "Awesome Product" },
                     new ClientCatalog { Name = "Nice Product" },
                     new ClientCatalog { Name = "Old Product" },
                     new ClientCatalog { Name = "Mobile App" },
@@ -105,78 +105,94 @@ namespace DocRepoApi.Data
                     context.Products.Add(product);
                 }
 
-                string[] versions = new string[] { "V2017.4", "V2017.5", "V2017.6", "V2017.7", "V2018.1", "V2018.2", "V2018.3", "V2018.4", "V2018.5" };
+                List<KeyValuePair<string, DateTime>> versionsWithEndDate = new List<KeyValuePair<string, DateTime>>
+                {
+                    new KeyValuePair<string, DateTime>("V2017.1", DateTime.Parse("2018-01-01")),
+                    new KeyValuePair<string, DateTime>("V2017.2", DateTime.Parse("2018-03-01")),
+                    new KeyValuePair<string, DateTime>("V2017.3", DateTime.Parse("2018-05-01")),
+                    new KeyValuePair<string, DateTime>("V2017.4", DateTime.Parse("2018-07-01")),
+                    new KeyValuePair<string, DateTime>("V2017.5", DateTime.Parse("2018-09-01")),
+                    new KeyValuePair<string, DateTime>("V2017.6", DateTime.Parse("2018-11-01")),
+                    new KeyValuePair<string, DateTime>("V2018.1", DateTime.Parse("2019-01-01")),
+                    new KeyValuePair<string, DateTime>("V2018.2", DateTime.Parse("2019-03-01")),
+                    new KeyValuePair<string, DateTime>("V2018.3", DateTime.Parse("2019-05-01")),
+                    new KeyValuePair<string, DateTime>("V2018.4", DateTime.Parse("2019-07-01")),
+                    new KeyValuePair<string, DateTime>("V2018.5", DateTime.Parse("2019-09-01")),
+                    new KeyValuePair<string, DateTime>("V2018.6", DateTime.Parse("2019-11-01"))
 
-                foreach (string version in versions)
+                };
+                
+
+                foreach (KeyValuePair<string, DateTime> version in versionsWithEndDate)
                 {
                     var productVersions = Enumerable.Range(1, products.Count())
-                        .Select(i => new ProductVersion { ProductId = i, Release = version, EndOfSupport = DateTime.Today.AddMonths(i * 2) });
+                        .Select(i => new ProductVersion { ProductId = i, Release = version.Key, EndOfSupport = version.Value});
                     context.AddRange(productVersions);
                 }
 
                 context.SaveChanges();
             }
 
-            Document doc1 = new Document
+            List<Product> productList = context.Products.ToList();
+            List<DocumentType> docTypeList = context.DocumentTypes.ToList();
+            ClientCatalog catalogFramework = context.ClientCatalogs.SingleOrDefault(cat => cat.Name == "Framework");
+
+            foreach (Product product in productList)
             {
-                Title = "Nice Product Release Notes",
-                PdfLink = "NiceProduct/ReleaseNotes/NiceProduct_ReleaseNotes_V2018-1.pdf",
-                DocumentTypeId = 9,
-                IsFitForClients = true,
-                ProductVersionId = 37,
-                DocumentAuthors = new List<DocumentAuthor>
+                ClientCatalog catalog = context.ClientCatalogs.SingleOrDefault(cat => cat.Name == product.FullName);
+
+                if (catalog == null)
                 {
-                    new DocumentAuthor {Author = authors[0]},
-                    new DocumentAuthor {Author = authors[1]}
-                },
-                DocumentCatalogs = new List<DocumentCatalog>
+                    catalog = context.ClientCatalogs.SingleOrDefault(cat => cat.Name == "Tools");
+                }                
+
+                List<ProductVersion> versions = context.ProductVersions.Where(v => v.ProductId == product.Id).ToList();
+                                
+                foreach (ProductVersion version in versions)
                 {
-                    new DocumentCatalog { Catalog =  clientCatalogs[1] }
+                    foreach (DocumentType docType in docTypeList)
+                    {
+                        string rootDir = $"{product.FullName.Replace(" ", string.Empty)}/{docType.FullName.Replace(" ", string.Empty)}";
+                        string printFileName = $"{product.FullName.Replace(" ", string.Empty)}_{docType.FullName.Replace(" ", string.Empty)}_{version.Release}";
+
+                        Document document = new Document
+                        {
+                            Title = $"{product.FullName} {docType.FullName}",
+                            ProductVersion = version,
+                            DocumentType = docType,
+                            DocumentAuthors = new List<DocumentAuthor>
+                            {
+                                new DocumentAuthor { Author = authors[0] },
+                                new DocumentAuthor { Author = authors[1] },
+                                new DocumentAuthor { Author = authors[2] }
+                            },
+                            HtmlLink = $"{rootDir}/HTML_{version.Release}/index.html",
+                            PdfLink = $"{rootDir}/PDF_{version.Release}/{printFileName}.pdf",
+                            WordLink = $"{rootDir}/Word_{version.Release}/{printFileName}.docx",
+
+                            IsFitForClients = docType.ShortName != "CG" && docType.ShortName != "AG",
+                            ShortDescription = $"The document contains the full {docType.FullName} for the {version.Release} of {product.FullName}",
+
+                            Updates = Enumerable.Range(1, 10)
+                                .Select(j => new DocumentUpdate
+                                {                                    
+                                    IsPublished = (j % 3 != 0),
+                                    LatestTopicsUpdated = $"This is version {j} of the document.",
+                                    Timestamp = version.EndOfSupport.AddYears(-1).AddMonths(j - 1)
+                                }).ToList(),
+
+                            DocumentCatalogs = new List<DocumentCatalog>
+                            {
+                                new DocumentCatalog { Catalog = catalog },
+                                new DocumentCatalog { Catalog = catalogFramework }
+                            }
+                        };
+
+                        context.Add(document);
+                    }
                 }
-
-            };
-
-            context.Documents.Add(doc1);
-
-
-            Document doc2 = new Document
-            {
-                Title = "Mobile App Release Notes",
-                PdfLink = "MobileApp/ReleaseNotes/MobileApp_ReleaseNotes_V2018-2.pdf",
-                DocumentTypeId = 9,
-                IsFitForClients = true,
-                ProductVersionId = 15,
-                DocumentAuthors = new List<DocumentAuthor>
-                {
-                    new DocumentAuthor {Author = authors[0]},
-                    new DocumentAuthor {Author = authors[2]},
-                    new DocumentAuthor {Author = authors[3]},
-                },
-                DocumentCatalogs = new List<DocumentCatalog>
-                {
-                    new DocumentCatalog { Catalog =  clientCatalogs[0] },
-                    new DocumentCatalog { Catalog =  clientCatalogs[3] }
-                }
-            };
-            context.Documents.Add(doc2);
-
-            var docUpdates = new DocumentUpdate[]
-            {
-                new DocumentUpdate { Timestamp = DateTime.Parse("2018-01-01"), IsPublished = true, DocumentId = 1, LatestTopicsUpdated = "This is the first version of the document." },
-                new DocumentUpdate { Timestamp = DateTime.Parse("2018-01-02"), IsPublished = true, DocumentId = 1, LatestTopicsUpdated = "Known Issues" },
-                new DocumentUpdate { Timestamp = DateTime.Parse("2018-01-03"), IsPublished = true, DocumentId = 1, LatestTopicsUpdated = "Bug Fixes" },
-                new DocumentUpdate { Timestamp = DateTime.Parse("2018-01-04"), IsPublished = false, DocumentId = 1, LatestTopicsUpdated = "V2018.1.1" },
-                new DocumentUpdate { Timestamp = DateTime.Parse("2018-01-01"), IsPublished = true, DocumentId = 2, LatestTopicsUpdated = "This is the first version of the document." },
-                new DocumentUpdate { Timestamp = DateTime.Parse("2018-01-02"), IsPublished = true, DocumentId = 2, LatestTopicsUpdated = "Known Issues" },
-                new DocumentUpdate { Timestamp = DateTime.Parse("2018-01-03"), IsPublished = true, DocumentId = 2, LatestTopicsUpdated = "Bug Fixes" },
-                new DocumentUpdate { Timestamp = DateTime.Parse("2018-01-04"), IsPublished = false, DocumentId = 2, LatestTopicsUpdated = "V2018.1.1" }
-            };
-
-            foreach (DocumentUpdate docUpdate in docUpdates)
-            {
-                context.DocumentUpdates.Add(docUpdate);
             }
-
+            
             context.SaveChanges();
 
         }
