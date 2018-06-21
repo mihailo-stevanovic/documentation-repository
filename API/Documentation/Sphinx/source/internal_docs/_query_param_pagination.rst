@@ -1,0 +1,1 @@
+You can use the query parameters to implement server-side pagination. If you set ``limit`` to ``50`` and ``page`` to ``1``, the API retrieves the 50 most recently published documents. If you set ``limit`` to ``50`` and ``page`` to ``1``, the second 50 most recently published documents display, and so on.

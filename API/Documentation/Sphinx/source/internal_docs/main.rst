@@ -1,11 +1,11 @@
 Internal Documents
 ==================
 
-.. todo:: 
-        
-    * Description
-    * Spellcheck             
+Internal Documents are the main entry point for portal applications. The ``DocumentInternal`` object consolidates the relevant information from all other entities into a single object. The ``DocumentInternal`` object is then used for displaying the information to internal users (i.e. company employees). 
+                 
+The available endpoints only support the ``GET`` method to ensure that the information is read-only. For creating, updating and deleting each entity, including documents, please refer to the appropriate section of the document.
 
+.. note:: Some entities have not been described yet. However, you can use the Swagger document to gain a basic insight. For more information, refer to :doc:`../swagger`.
 
 
 

@@ -21,13 +21,15 @@ Request
 |                 |       |         |          |                                                  |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``limit``       | query | integer | No       | Number of returned results.                      |
+|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``20``.                               |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``page``        | query | integer | No       | Index of the displayed set of results.           |
+|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``1``.                                |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 
-You can use the query parameters to implement server-side pagination. If you set ``limit`` to ``50`` and ``page`` to ``1``, the API retrieves the 50 most recently published documents. If you set ``limit`` to ``50`` and ``page`` to ``1``, second 50 most recently published documents display, and so on.
+.. include:: _query_param_pagination.rst
 
 Response
 --------
@@ -36,8 +38,8 @@ Response
 | Status Code         | Body                      | Notes                                            |
 +=====================+===========================+==================================================+
 | ``200 OK``          | Array of                  | * The documents are first sorted by              |
-|                     | ``DocumentInternal``      |   ``latestUpdate``, then by ``Product`` and      |
-|                     | objects.                  |   finally by ``Version``.                        |
+|                     | ``DocumentInternal``      |   ``latestUpdate``, then by ``product`` and      |
+|                     | objects.                  |   finally by ``version``.                        |
 |                     |                           |                                                  |
 |                     |                           | * Only documents with at least one update that   |
 |                     |                           |   has ``isPublished: true`` are retrieved.       |
@@ -45,18 +47,19 @@ Response
 +---------------------+---------------------------+--------------------------------------------------+
 | ``400 Bad Request`` | Description of the error. | * The description of the error is returned as an |    
 |                     |                           |   object whose property is the name of the error |    
-|                     |                           |   and value is a description of the error.       |
+|                     |                           |   with a description of the error in the         |
+|                     |                           |   related value.                                 |
 |                     |                           |                                                  |
-|                     |                           |                                                  | 
 |                     |                           |   .. code-block:: javascript                     |
 |                     |                           |                                                  | 
 |                     |                           |       {                                          |
 |                     |                           |           "Error": [                             |
 |                     |                           |               "Description of the error."        | 
 |                     |                           |           ]                                      |
-|                     |                           |       }                                          |    
+|                     |                           |       }                                          |
+|                     |                           |                                                  |
 +---------------------+---------------------------+--------------------------------------------------+
-| ``404 Not Found``   | N/A                       | * This can mean the ``docTypeId`` is incorrect.  |
+| ``404 Not Found``   | N/A                       | * This can mean that ``docTypeId`` is incorrect. |
 |                     |                           |                                                  |
 |                     |                           |                                                  |
 +---------------------+---------------------------+--------------------------------------------------+

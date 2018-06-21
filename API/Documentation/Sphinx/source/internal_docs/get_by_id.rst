@@ -36,16 +36,17 @@ Response
 +---------------------+---------------------------+--------------------------------------------------+
 | ``400 Bad Request`` | Description of the error. | * The description of the error is returned as an |    
 |                     |                           |   object whose property is the name of the error |    
-|                     |                           |   and value is a description of the error.       |
+|                     |                           |   with a description of the error in the         |
+|                     |                           |   related value.                                 |
 |                     |                           |                                                  |
-|                     |                           |                                                  | 
 |                     |                           |   .. code-block:: javascript                     |
 |                     |                           |                                                  | 
 |                     |                           |       {                                          |
 |                     |                           |           "Error": [                             |
 |                     |                           |               "Description of the error."        | 
 |                     |                           |           ]                                      |
-|                     |                           |       }                                          |    
+|                     |                           |       }                                          |
+|                     |                           |                                                  |   
 +---------------------+---------------------------+--------------------------------------------------+
 | ``404 Not Found``   | N/A                       | * This can mean the document does not have       |
 |                     |                           |   an update with ``isPublished: true``.          |

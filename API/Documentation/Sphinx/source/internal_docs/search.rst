@@ -21,14 +21,20 @@ Request
 |                 |       |         |          |                                                  |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``limit``       | query | integer | No       | Number of returned results.                      |
+|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``20``.                               |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``page``        | query | integer | No       | Index of the displayed set of results.           |
+|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``1``.                                |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``exactMatch``  | query | boolean | No       | When set to ``true``, the search term is used as |
-|                 |       |         |          | a whole. When set to ``false``, each word is     |
-|                 |       |         |          | search for separately. Default is ``true``.      |
+|                 |       |         |          | a whole.                                         |
+|                 |       |         |          |                                                  |
+|                 |       |         |          | When set to ``false``, each word is              |
+|                 |       |         |          | search for separately.                           |
+|                 |       |         |          |                                                  |
+|                 |       |         |          | Default is ``true``.                             |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 
 You can use the query parameters to implement server-side pagination. If you set ``limit`` to ``50`` and ``page`` to ``1``, the API retrieves the 50 most recently published documents. If you set ``limit`` to ``50`` and ``page`` to ``1``, second 50 most recently published documents display, and so on.
@@ -58,7 +64,8 @@ Response
 |                     |                           |           "Error": [                             |
 |                     |                           |               "Description of the error."        | 
 |                     |                           |           ]                                      |
-|                     |                           |       }                                          |    
+|                     |                           |       }                                          |
+|                     |                           |                                                  | 
 +---------------------+---------------------------+--------------------------------------------------+
 | ``404 Not Found``   | N/A                       |                                                  |
 |                     |                           |                                                  |
