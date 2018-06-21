@@ -21,11 +21,9 @@ Request
 |                 |       |         |          |                                                  |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``limit``       | query | integer | No       | Number of returned results.                      |
-|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``20``.                               |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``page``        | query | integer | No       | Index of the displayed set of results.           |
-|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``1``.                                |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 
@@ -49,7 +47,7 @@ Response
 |                     |                           |   with a description of the error in the         |
 |                     |                           |   related value.                                 |
 |                     |                           |                                                  |
-|                     |                           |   .. code-block:: javascript                     |
+|                     |                           | .. code-block:: javascript                       |
 |                     |                           |                                                  | 
 |                     |                           |       {                                          |
 |                     |                           |           "Error": [                             |

@@ -21,19 +21,15 @@ Request
 |                 |       |         |          |                                                  |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``limit``       | query | integer | No       | Number of returned results.                      |
-|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``20``.                               |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``page``        | query | integer | No       | Index of the displayed set of results.           |
-|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``1``.                                |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``exactMatch``  | query | boolean | No       | When set to ``true``, the search term is used as |
 |                 |       |         |          | a whole.                                         |
-|                 |       |         |          |                                                  |
 |                 |       |         |          | When set to ``false``, each word is              |
 |                 |       |         |          | search for separately.                           |
-|                 |       |         |          |                                                  |
 |                 |       |         |          | Default is ``true``.                             |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 
@@ -58,7 +54,7 @@ Response
 |                     |                           |   and value is a description of the error.       |
 |                     |                           |                                                  |
 |                     |                           |                                                  | 
-|                     |                           |   .. code-block:: javascript                     |
+|                     |                           | .. code-block:: javascript                       |
 |                     |                           |                                                  | 
 |                     |                           |       {                                          |
 |                     |                           |           "Error": [                             |

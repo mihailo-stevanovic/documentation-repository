@@ -39,7 +39,7 @@ Response
 |                     |                           |   with a description of the error in the         |
 |                     |                           |   related value.                                 |
 |                     |                           |                                                  |
-|                     |                           |   .. code-block:: javascript                     |
+|                     |                           | .. code-block:: javascript                       |
 |                     |                           |                                                  | 
 |                     |                           |       {                                          |
 |                     |                           |           "Error": [                             |
