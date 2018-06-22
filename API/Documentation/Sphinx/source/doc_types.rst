@@ -76,7 +76,7 @@ Retrieving Existing Document Types
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Retrieve All Document Types
---------------------
+---------------------------
 
 You can retrieve existing document types by executing a ``GET`` action against the ``api/v1/documenttypes`` endpoint.
 
