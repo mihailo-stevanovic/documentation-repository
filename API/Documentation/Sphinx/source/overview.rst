@@ -16,9 +16,9 @@ The API enables you to work with the following entities:
 
 * :doc:`internal_docs/main`
 * :doc:`authors` 
-* Client Catalogs
+* :doc:`client_catalogs`
 * Documents
 * Document Updates
-* Document Types
+* :doc:`doc_types`
 * Products
 * Product Versions

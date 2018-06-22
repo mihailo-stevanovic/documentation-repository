@@ -281,6 +281,7 @@ You can modify an existing author by executing a ``PUT`` action against the ``ap
 Use the request body to pass the updated ``Author`` object. Please note that you need to include all the properties of the object, including the ``ID``.
 
 .. code-block:: javascript
+    :emphasize-lines: 5,7
 
     {
         "id": 1,
