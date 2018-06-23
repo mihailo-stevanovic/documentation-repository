@@ -59,8 +59,8 @@ Data Model
 |                     | objects           |                                                             |
 +---------------------+-------------------+-------------------------------------------------------------+
 | clientCatalogs      | array of          | Client catalogs related to the document.                    |
-|                     | ``ClientCatalog`` |                                                             |
-|                     | objects           |                                                             |
+|                     | ``ClientCatalog`` | For more information, please refer to                       |
+|                     | objects           | :doc:`../client_catalogs`.                                  |
 +---------------------+-------------------+-------------------------------------------------------------+
 
 .. image:: ../graphics/Models_V100_DocumentInternalRelations.png

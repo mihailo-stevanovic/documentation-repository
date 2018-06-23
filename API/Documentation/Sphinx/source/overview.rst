@@ -20,5 +20,5 @@ The API enables you to work with the following entities:
 * Documents
 * Document Updates
 * :doc:`doc_types`
-* Products
-* Product Versions
+* :doc:`products`
+* :doc:`versions`

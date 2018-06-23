@@ -231,4 +231,4 @@ The ``200 OK`` status code is returned. The body of the response contains the de
         "internalId": "6F9619FF-8B86-D011-B42D-00C04FC964FF"
     }
 
-If a client catalog with a matching ID is cannot be found, a ``404 Not Found`` status code is returned.
+If a client catalog with a matching ID cannot be found, a ``404 Not Found`` status code is returned.

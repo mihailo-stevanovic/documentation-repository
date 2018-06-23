@@ -1,7 +1,7 @@
 Retrieve By Document Type
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Retrieve a list of all published documents of a specified document type. Useful for filtering documents based on the target audience. E.g. end-users may only be interested in User Guides while the technical support may want to view only Installation Guides.
+Retrieve a list of all published documents of a specified :doc:`document type <../doc_types>`. Useful for filtering documents based on the target audience. E.g. end-users may only be interested in User Guides while the technical support may want to view only Installation Guides.
 
 Endpoint
 --------
@@ -18,7 +18,9 @@ Request
 | Name            | Type  | Value   | Required | Description                                      |
 +=================+=======+=========+==========+==================================================+
 | ``docTypeId``   | path  | integer | Yes      | ID of the related document type.                 |
-|                 |       |         |          |                                                  |
+|                 |       |         |          | For more information on retrieving the           |
+|                 |       |         |          | ``docTypeId``, please refer to                   |
+|                 |       |         |          | :doc:`../doc_types`.                             |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``limit``       | query | integer | No       | Number of returned results.                      |
 |                 |       |         |          | Default is ``20``.                               |

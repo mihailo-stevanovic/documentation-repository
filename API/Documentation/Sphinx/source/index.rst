@@ -17,4 +17,6 @@ The |API| is RESTful API built using ASP.NET Core 2.0. It is used for publishing
    authors
    client_catalogs
    doc_types
+   products
+   versions
    swagger

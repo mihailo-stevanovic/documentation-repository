@@ -37,7 +37,7 @@ You can create a single document type by executing a ``POST`` action against the
     POST api/v1/documenttypes
 
 
-The body of the request requires an ``DocumentType`` object. You can set the ``id`` property to ``0`` or exclude it from the object.
+The body of the request requires a ``DocumentType`` object. You can set the ``id`` property to ``0`` or exclude it from the object.
 
 .. code-block:: javascript
 
@@ -192,4 +192,4 @@ The ``200 OK`` status code is returned. The body of the response contains the de
         "documentCategory": 0
     }
 
-If a document type with a matching ID is cannot be found, a ``404 Not Found`` status code is returned.
+If a document type with a matching ID cannot be found, a ``404 Not Found`` status code is returned.

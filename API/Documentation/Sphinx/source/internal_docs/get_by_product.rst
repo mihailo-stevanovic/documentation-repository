@@ -1,7 +1,7 @@
 Retrieve By Product
 ^^^^^^^^^^^^^^^^^^^
 
-Retrieve a list of all published documents of a specified product.
+Retrieve a list of all published documents of a specified :doc:`product <../products>`.
 
 Endpoint
 --------
@@ -18,7 +18,9 @@ Request
 | Name            | Type  | Value   | Required | Description                                      |
 +=================+=======+=========+==========+==================================================+
 | ``productId``   | path  | integer | Yes      | ID of the related product.                       |
-|                 |       |         |          |                                                  |
+|                 |       |         |          | For more information on retrieving the           |
+|                 |       |         |          | ``productId``, please refer to                   |
+|                 |       |         |          | :doc:`../products`.                              |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``limit``       | query | integer | No       | Number of returned results.                      |
 |                 |       |         |          | Default is ``20``.                               |

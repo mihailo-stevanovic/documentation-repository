@@ -1,7 +1,7 @@
 Retrieve By Product Version
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Retrieve a list of all published documents of a specified product version (release).
+Retrieve a list of all published documents of a specified :doc:`product version (release) <../versions>`.
 
 Endpoint
 --------
@@ -18,7 +18,9 @@ Request
 | Name            | Type  | Value   | Required | Description                                      |
 +=================+=======+=========+==========+==================================================+
 | ``versionId``   | path  | integer | Yes      | ID of the related product version.               |
-|                 |       |         |          |                                                  |
+|                 |       |         |          | For more information on retrieving the           |
+|                 |       |         |          | ``versionId``, please refer to                   |
+|                 |       |         |          | :doc:`../versions`.                              |
 +-----------------+-------+---------+----------+--------------------------------------------------+
 | ``limit``       | query | integer | No       | Number of returned results.                      |
 |                 |       |         |          | Default is ``20``.                               |

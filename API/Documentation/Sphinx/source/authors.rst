@@ -332,4 +332,4 @@ The ``200 OK`` status code is returned. The body of the response contains the de
         "aitName": "Jamie"
     }
 
-If an author with a matching ID is cannot be found, a ``404 Not Found`` status code is returned.
+If an author with a matching ID cannot be found, a ``404 Not Found`` status code is returned.
