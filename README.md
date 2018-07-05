@@ -35,7 +35,9 @@ It implements Swagger documentation using Swashbuckle.
 
 ## Portal
 
-The portal app is being built using React.js. It is used to display all documents to internal users (company employees).
+The portal app is built using React.js and Material UI. It is used to display all documents to internal users (company employees).
+
+For more information, please refer to the dedicated [README](#portal/readme.md).
 
 ## Admin
 
