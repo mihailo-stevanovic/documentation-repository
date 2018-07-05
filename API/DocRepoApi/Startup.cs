@@ -59,9 +59,10 @@ namespace DocRepoApi
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-                app.UseCors(builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader());
+                app.UseDeveloperExceptionPage();                
             }
+
+            app.UseCors(builder => builder.WithOrigins("http://localhost:3000","http://192.168.0.93:3000/","http://192.168.0.93:5000/").AllowAnyHeader());
             
             app.UseStaticFiles();
             // Enable middleware to serve generated Swagger as a JSON endpoint.

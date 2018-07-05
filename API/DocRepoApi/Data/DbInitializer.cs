@@ -90,14 +90,14 @@ namespace DocRepoApi.Data
             {
                 var products = new Product[]
                 {
-                    new Product { ShortName = "P1" , FullName = "Awesome Product", Alias = "Product 1" },
-                    new Product { ShortName = "P2" , FullName = "Nice Product", Alias = "Product 2" },
-                    new Product { ShortName = "P3" , FullName = "Old Product", Alias = "Product 3" },
-                    new Product { ShortName = "P4" , FullName = "Mobile App", Alias = "Product 4" },
-                    new Product { ShortName = "P5" , FullName = "CRM Solution", Alias = "Product 5" },
-                    new Product { ShortName = "P6" , FullName = "Next Gen Portal", Alias = "Product 6" },
-                    new Product { ShortName = "P7" , FullName = "Classic Portal", Alias = "Product 7" },
-                    new Product { ShortName = "P8" , FullName = "Reporting", Alias = "Product 8" }
+                    new Product { ShortName = "AP" , FullName = "Awesome Product", Alias = "Product 1" },
+                    new Product { ShortName = "NP" , FullName = "Nice Product", Alias = "Product 2" },
+                    new Product { ShortName = "OP" , FullName = "Old Product", Alias = "Product 3" },
+                    new Product { ShortName = "MP" , FullName = "Mobile App", Alias = "Product 4" },
+                    new Product { ShortName = "CRM" , FullName = "CRM Solution", Alias = "Product 5" },
+                    new Product { ShortName = "NGP" , FullName = "Next Gen Portal", Alias = "Product 6" },
+                    new Product { ShortName = "CP" , FullName = "Classic Portal", Alias = "Product 7" },
+                    new Product { ShortName = "R" , FullName = "Reporting", Alias = "Product 8" }
                 };
 
                 foreach (Product product in products)
