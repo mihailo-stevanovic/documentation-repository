@@ -22,7 +22,7 @@ import InfoIcon from '@material-ui/icons/Info';
 
 import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core/styles';
 
-import withWidth, { WithWidthProps } from '@material-ui/core/withWidth';
+import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 
 import { CustomError } from '../../models/customerror';
 import { Document } from '../../models/document';
@@ -46,7 +46,7 @@ const styles = (theme: Theme) => createStyles({
 });
 
 
-interface ISingleDocumentProps extends WithStyles<typeof styles>, WithWidthProps{
+interface ISingleDocumentProps extends WithStyles<typeof styles>, WithWidth{
     document: Document;  
     onError(error: CustomError):void;     
 }

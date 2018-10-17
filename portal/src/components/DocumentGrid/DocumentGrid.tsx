@@ -19,7 +19,7 @@ import DocumentTitleWithLinks from '../DocumentTitleWithLinks/DocumentTitleWithL
 import CatalogsDocGrid from '../CatalogsDocGrid/CatalogsDocGrid';
 import SingleDocument from '../SingleDocument/SingleDocument';
 
-import withWidth, { WithWidthProps } from '@material-ui/core/withWidth';
+import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 
@@ -64,7 +64,7 @@ const onSmall = (size: Breakpoint) => {
   return size === 'xl' || size === 'lg' || size === 'md' || size === 'sm';
 };
 
-interface IDocumentGridProps extends WithStyles<typeof styles>, WithWidthProps{
+interface IDocumentGridProps extends WithStyles<typeof styles>, WithWidth{
   documents: Document[];
   docTypes: DocType[];
   products: Product[];
