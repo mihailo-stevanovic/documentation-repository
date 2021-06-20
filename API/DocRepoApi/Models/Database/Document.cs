@@ -89,6 +89,7 @@ namespace DocRepoApi.Models
         /// <summary>
         /// ID of the related product version.
         /// </summary>
+        [Required]
         public int ProductVersionId { get; set; }
         /// <summary>
         /// Link to the related product version.
@@ -99,6 +100,7 @@ namespace DocRepoApi.Models
         /// <summary>
         /// ID of the related document type.
         /// </summary>
+        [Required]
         public int DocumentTypeId { get; set; }
         /// <summary>
         /// Link to the related document type.
