@@ -10,7 +10,7 @@
     "material-ui-search-bar": "^1.0.0-beta.13",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "react-scripts-ts": "2.16.0",
+    "react-scripts-ts": "4.0.8",
     "react-table": "^6.8.6",
     "uniqid": "^5.0.3"
   },
